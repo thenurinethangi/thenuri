@@ -1,7 +1,7 @@
 "use client"
 
 import NavigationModal from "@/components/NavigationModal"
-import { motion } from "framer-motion"
+import { motion, Variants } from "framer-motion"
 import { useState } from "react"
 import { FaGraduationCap, FaCertificate, FaAward } from "react-icons/fa"
 
@@ -44,7 +44,7 @@ const educationData = [
     },
 ]
 
-const containerVariants = {
+const containerVariants: Variants = {
     hidden: { opacity: 0 },
     show: {
         opacity: 1,
@@ -54,7 +54,7 @@ const containerVariants = {
     },
 }
 
-const itemVariants = {
+const itemVariants: Variants = {
     hidden: { opacity: 0, x: -30 },
     show: { opacity: 1, x: 0, transition: { type: "spring", stiffness: 100, damping: 15 } },
 }
