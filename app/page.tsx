@@ -201,7 +201,6 @@ export default function Home() {
 
         <div
           onClick={() => {
-            console.log("Modal Opened");
             setIsModalOpen(true)
           }}
           className="absolute z-50 top-9 right-11 cursor-pointer">

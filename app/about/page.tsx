@@ -12,7 +12,6 @@ const skillsData = [
     { category: "Databases", icon: "🗄️", items: ["MySQL", "MongoDB", "Redis", "Firebase Firestore"] },
     { category: "Cloud", icon: "☁️", items: ["Docker", "Firebase Auth", "Firebase Hosting"] },
     { category: "Tools", icon: "🛠️", items: ["Git", "GitHub", "Postman", "Figma"] },
-    { category: "Architecture", icon: "💡", items: ["REST APIs", "Microservices", "JWT Authentication", "Scalable System Design"] }
 ];
 
 const containerVariants: Variants = {
@@ -94,37 +93,38 @@ export default function About() {
                     variants={containerVariants}
                     initial="hidden"
                     animate="visible"
-                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 w-full max-w-[1400px] auto-rows-max pb-32"
+                    className="grid grid-cols-1 w-full max-w-[1400px] auto-rows-max pb-32"
                 >
-                    {skillsData.map((group, idx) => (
-                        <motion.div
-                            key={idx}
-                            variants={cardVariants}
-                            whileHover={{ y: -8, scale: 1.02 }}
-                            className={`p-6 md:p-8 rounded-[32px] bg-white/20 backdrop-blur-xl border border-white/50 shadow-[0_8px_32px_rgba(0,0,0,0.05)] hover:shadow-[0_8px_32px_rgba(0,0,0,0.15)] flex flex-col gap-6 transition-all duration-300 ${idx === 1 || idx === 6 ? 'md:col-span-2' : ''
-                                } ${idx === 1 ? 'xl:col-span-3' : ''}`}
-                        >
-                            <div className="flex items-center gap-3">
-                                <span className="text-3xl">{group.icon}</span>
-                                <h3 className="text-2xl font-black font-space-grotesk text-[#37474F] tracking-tight">
+                    {/* {skillsData.map((group, idx) => ( */}
+                    <motion.div
+                        // key={idx}
+                        variants={cardVariants}
+                        whileHover={{ y: -8, scale: 1.02 }}
+                        className={`p-6 md:p-8 rounded-[32px] flex flex-col gap-6 transition-all duration-300`}
+                    >
+                        <div className="flex items-center gap-3">
+                            {/* <span className="text-3xl">{group.icon}</span> */}
+                            {/* <h3 className="text-2xl font-black font-space-grotesk text-[#37474F] tracking-tight">
                                     {group.category}
-                                </h3>
-                            </div>
+                                </h3> */}
+                        </div>
 
-                            <div className="flex flex-wrap gap-2 md:gap-3">
-                                {group.items.map((skill, sIdx) => (
+                        <div className="flex flex-wrap gap-2 md:gap-3">
+                            {skillsData.map((item, sId) => (
+                                item.items.map((skill, sIdx) => (
                                     <motion.div
-                                        key={sIdx}
+                                        key={`${sId}-${sIdx}`}
                                         variants={itemVariants}
                                         whileHover={{ scale: 1.05, backgroundColor: "#F5F5F5", color: "#111111" }}
-                                        className="px-4 py-2 bg-white/40 border border-white/60 rounded-full shadow-sm text-[#455A64] font-poppins text-sm md:text-base font-medium cursor-default transition-colors duration-300"
+                                        className="w-[100px] h-[100px] flex justify-center items-center px-4 py-4 bg-white/40 border border-white/60 rounded-[100%] shadow-sm text-[#455A64] font-poppins text-sm md:text-base font-medium cursor-default transition-colors duration-300"
                                     >
                                         {skill}
                                     </motion.div>
-                                ))}
-                            </div>
-                        </motion.div>
-                    ))}
+                                ))
+                            ))}
+                        </div>
+                    </motion.div>
+                    {/* ))} */}
                 </motion.div>
             </div>
 

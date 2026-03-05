@@ -1,136 +1,164 @@
-"use client";
+"use client"
 
-import { useState } from "react";
-import { motion, AnimatePresence, Variants } from "framer-motion";
-import NavigationModal from "@/components/NavigationModal";
-import Link from "next/link";
+import NavigationModal from "@/components/NavigationModal"
+import { motion } from "framer-motion"
+import { useState } from "react"
+import {
+    SiReact,
+    SiNextdotjs,
+    SiTypescript,
+    SiJavascript,
+    SiTailwindcss,
+    SiNodedotjs,
+    SiExpress,
+    SiMongodb,
+    SiPostgresql,
+    SiFirebase,
+    SiDocker,
+    SiGit,
+} from "react-icons/si"
 
-const skillsData = [
-    { category: "Languages", icon: "💻", items: ["Java", "Python", "JavaScript (ES6+)", "TypeScript"] },
-    { category: "Frontend", icon: "✨", items: ["React.js", "Next.js", "React Native", "Three.js", "Tailwind CSS", "HTML5", "CSS3"] },
-    { category: "Backend", icon: "⚙️", items: ["Node.js", "Express.js", "Spring Boot", "Hibernate"] },
-    { category: "Databases", icon: "🗄️", items: ["MySQL", "MongoDB", "Redis", "Firebase Firestore"] },
-    { category: "Cloud", icon: "☁️", items: ["Docker", "Firebase Auth", "Firebase Hosting"] },
-    { category: "Tools", icon: "🛠️", items: ["Git", "GitHub", "Postman", "Figma"] },
-    { category: "Architecture", icon: "💡", items: ["REST APIs", "Microservices", "JWT Authentication", "Scalable System Design"] }
-];
-
-const containerVariants: Variants = {
+const container = {
     hidden: { opacity: 0 },
-    visible: {
+    show: {
         opacity: 1,
-        transition: { staggerChildren: 0.1, delayChildren: 0.2 }
-    }
-};
+        transition: {
+            staggerChildren: 0.08,
+        },
+    },
+}
 
-const cardVariants: Variants = {
-    hidden: { y: 40, opacity: 0, scale: 0.95 },
-    visible: {
-        y: 0,
-        opacity: 1,
-        scale: 1,
-        transition: { type: "spring", stiffness: 100, damping: 15 }
-    }
-};
+const item = {
+    hidden: { opacity: 0, y: 20 },
+    show: { opacity: 1, y: 0 },
+}
 
-const itemVariants: Variants = {
-    hidden: { opacity: 0, x: -10 },
-    visible: { opacity: 1, x: 0, transition: { type: "spring", stiffness: 120 } }
-};
+const skills = [
+    {
+        title: "Frontend",
+        items: [
+            { name: "React", icon: <SiReact /> },
+            { name: "Next.js", icon: <SiNextdotjs /> },
+            { name: "TypeScript", icon: <SiTypescript /> },
+            { name: "JavaScript", icon: <SiJavascript /> },
+            { name: "Tailwind CSS", icon: <SiTailwindcss /> },
+        ],
+    },
+    {
+        title: "Backend",
+        items: [
+            { name: "Node.js", icon: <SiNodedotjs /> },
+            { name: "Express", icon: <SiExpress /> },
+        ],
+    },
+    {
+        title: "Database",
+        items: [
+            { name: "MongoDB", icon: <SiMongodb /> },
+            { name: "PostgreSQL", icon: <SiPostgresql /> },
+            { name: "Firebase", icon: <SiFirebase /> },
+        ],
+    },
+    {
+        title: "Tools",
+        items: [
+            { name: "Docker", icon: <SiDocker /> },
+            { name: "Git", icon: <SiGit /> },
+        ],
+    },
+]
 
 export default function Skills() {
+
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     return (
-        <main className="relative h-screen w-full bg-gradient-to-b from-[#B0BEC5] to-[#FFFFFF] overflow-hidden selection:bg-[#546E7A] selection:text-white flex justify-center">
-
-            {/* Background Watermark effect - Huge Text */}
-            <div className="fixed inset-0 z-0 flex items-center justify-center pointer-events-none opacity-[0.03]">
-                <h1 className="text-[25vw] font-black font-space-grotesk whitespace-nowrap text-[#111111]">
-                    SKILLS
-                </h1>
-            </div>
-
-            {/* Navigation Header */}
-            <div className="fixed top-9 left-12 z-50 cursor-pointer hover:scale-105 transition-transform duration-300">
-                <Link href="/">
-                    <svg width="43" height="43" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="50" cy="50" r="46" stroke="#F5F5F5" strokeWidth="3" fill="#F5F5F5" />
-                        <text x="50%" y="55%" textAnchor="middle" dominantBaseline="middle" fontFamily="Inter, sans-serif" fontSize="65" fontWeight="400" fill="#B0BEC5" letterSpacing="-2">
-                            T.
-                        </text>
+        <>
+            <section className="fixed inset-0 bg-gradient-to-b from-[#B0BEC5] to-[#90A4AE] text-white">
+                <div className="absolute bottom-[-200px] left-[-200px] w-[600px] h-[600px] bg-white/10 rounded-full blur-3xl pointer-events-none" />
+                <div
+                    onClick={() => setIsModalOpen(true)}
+                    className="fixed z-50 top-9 right-11 cursor-pointer hover:scale-110 transition-transform duration-300"
+                >
+                    <svg
+                        width="40"
+                        height="40"
+                        viewBox="0 0 40 40"
+                        xmlns="http://www.w3.org/2000/svg"
+                    >
+                        <line x1="8" y1="15" x2="34" y2="15" stroke="#F5F5F5" strokeWidth="2.5" strokeLinecap="round" />
+                        <line x1="8" y1="25" x2="34" y2="25" stroke="#F5F5F5" strokeWidth="2.5" strokeLinecap="round" />
                     </svg>
-                </Link>
-            </div>
+                </div>
 
-            <div
-                onClick={() => setIsModalOpen(true)}
-                className="fixed z-50 top-9 right-11 cursor-pointer hover:scale-110 transition-transform duration-300"
-            >
-                <svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
-                    <line x1="8" y1="15" x2="34" y2="15" stroke="#F5F5F5" strokeWidth="2.5" strokeLinecap="round" />
-                    <line x1="8" y1="25" x2="34" y2="25" stroke="#F5F5F5" strokeWidth="2.5" strokeLinecap="round" />
-                </svg>
-            </div>
+                <div className="absolute inset-0 w-full h-full overflow-y-auto px-6 md:px-16 pt-32 pb-20 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
 
-            {/* Main Content */}
-            <div className="relative z-10 w-full h-screen pt-32 pb-20 px-6 md:px-12 lg:px-24 flex flex-col items-center overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+                    {/* Section Title */}
+                    <div className="max-w-6xl mx-auto mb-23">
+                        <h2 className="w-[100px] text-4xl md:text-6xl font-black font-space-grotesk tracking-tighter text-[#F5F5F5] drop-shadow-sm mb-4">
+                            CORE EXPERTISE
+                        </h2>
+                        {/* <div className="mt-4 h-[1px] w-27 bg-white/40" /> */}
+                    </div>
 
-                <motion.div
-                    initial={{ opacity: 0, y: -20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8, ease: "easeOut" }}
-                    className="mb-12 text-center shrink-0"
-                >
-                    <h2 className="text-4xl md:text-6xl font-black font-space-grotesk tracking-tighter text-[#F5F5F5] drop-shadow-sm mb-4">
-                        MY EXPERTISE
-                    </h2>
-                    <p className="text-[#546E7A] font-poppins text-lg max-w-2xl mx-auto">
-                        A curated toolkit of modern technologies I use to build robust, scalable, and visually stunning applications.
-                    </p>
-                </motion.div>
-
-                <motion.div
-                    variants={containerVariants}
-                    initial="hidden"
-                    animate="visible"
-                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 w-full max-w-[1400px] auto-rows-max pb-32"
-                >
-                    {skillsData.map((group, idx) => (
-                        <motion.div
-                            key={idx}
-                            variants={cardVariants}
-                            whileHover={{ y: -8, scale: 1.02 }}
-                            className={`p-6 md:p-8 rounded-[32px] bg-white/20 backdrop-blur-xl border border-white/50 shadow-[0_8px_32px_rgba(0,0,0,0.05)] hover:shadow-[0_8px_32px_rgba(0,0,0,0.15)] flex flex-col gap-6 transition-all duration-300 ${idx === 1 || idx === 6 ? 'md:col-span-2' : ''
-                                } ${idx === 1 ? 'xl:col-span-3' : ''}`}
-                        >
-                            <div className="flex items-center gap-3">
-                                <span className="text-3xl">{group.icon}</span>
-                                <h3 className="text-2xl font-black font-space-grotesk text-[#37474F] tracking-tight">
-                                    {group.category}
+                    {/* Skills Groups */}
+                    <div className="max-w-6xl mx-auto space-y-24">
+                        {skills.map((group, index) => (
+                            <div key={index}>
+                                <h3 className="text-xl uppercase tracking-widest text-white/60 mb-10">
+                                    {group.title}
                                 </h3>
-                            </div>
 
-                            <div className="flex flex-wrap gap-2 md:gap-3">
-                                {group.items.map((skill, sIdx) => (
-                                    <motion.div
-                                        key={sIdx}
-                                        variants={itemVariants}
-                                        whileHover={{ scale: 1.05, backgroundColor: "#F5F5F5", color: "#111111" }}
-                                        className="px-4 py-2 bg-white/40 border border-white/60 rounded-full shadow-sm text-[#455A64] font-poppins text-sm md:text-base font-medium cursor-default transition-colors duration-300"
-                                    >
-                                        {skill}
-                                    </motion.div>
-                                ))}
-                            </div>
-                        </motion.div>
-                    ))}
-                </motion.div>
-            </div>
+                                <motion.div
+                                    variants={container}
+                                    initial="hidden"
+                                    whileInView="show"
+                                    viewport={{ once: true }}
+                                    className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-8"
+                                >
+                                    {group.items.map((skill, i) => (
+                                        <motion.div
+                                            key={i}
+                                            variants={item}
+                                            whileHover={{ y: -6 }}
+                                            className="
+                    group
+                    relative
+                    rounded-3xl
+                    bg-white/5
+                    backdrop-blur-xl
+                    border border-white/10
+                    p-8
+                    flex
+                    flex-col
+                    items-center
+                    justify-center
+                    gap-6
+                    transition-all
+                    duration-500
+                    hover:bg-white/10
+                  "
+                                        >
+                                            <div className="text-5xl text-white/80 transition-transform duration-500 group-hover:scale-110">
+                                                {skill.icon}
+                                            </div>
 
-            <AnimatePresence>
-                {isModalOpen && <NavigationModal onClose={() => setIsModalOpen(false)} />}
-            </AnimatePresence>
-        </main>
-    );
+                                            <span className="text-xs tracking-widest uppercase text-white/60">
+                                                {skill.name}
+                                            </span>
+                                        </motion.div>
+                                    ))}
+                                </motion.div>
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* Soft radial glow background */}
+                    <div className="absolute -top-40 -right-40 w-[500px] h-[500px] bg-white/10 rounded-full blur-3xl pointer-events-none" />
+                </div>
+            </section>
+
+            {isModalOpen && <NavigationModal onClose={() => setIsModalOpen(false)} />}
+        </>
+    )
 }
