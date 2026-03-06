@@ -3,252 +3,448 @@
 import NavigationModal from "@/components/NavigationModal";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { useRef, useMemo, useState, useEffect } from "react";
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import * as THREE from "three";
 
-const roles = ["Software Engineer.", "Undergraduate Student.", "Web Developer.", "Mobile Developer."];
+const roles = [
+  "Software Engineer",
+  "Undergraduate Student",
+  "Web Developer",
+  "Mobile Developer",
+];
 
+/* ─────────────────────────────────────────────
+   GRAIN OVERLAY  (SVG noise rendered via CSS)
+───────────────────────────────────────────── */
+function GrainOverlay() {
+  return (
+    <div
+      aria-hidden
+      style={{
+        position: "fixed",
+        inset: 0,
+        zIndex: 5,
+        pointerEvents: "none",
+        opacity: 0.045,
+        backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
+        backgroundRepeat: "repeat",
+        backgroundSize: "180px 180px",
+      }}
+    />
+  );
+}
+
+/* ─────────────────────────────────────────────
+   3-D BUBBLE CLUSTER
+───────────────────────────────────────────── */
 function BubbleCluster() {
   const groupRef = useRef<THREE.Group>(null);
-
-  // 1️⃣ Generate Random Spheres
-  // Use state instead of useMemo to avoid hydration mismatches.
-  // We initialize with an empty array on the server (SSR), and fill it randomly only on the client.
   const [spheres, setSpheres] = useState<any[]>([]);
 
   useEffect(() => {
-    const count = 60;
-
-    // Step 1: Generate random positions in a spherical cluster
-    const temp = new Array(count).fill(0).map(() => {
-      // Use math to make a perfect spherical cluster instead of a square box
-      const radius = Math.random() * 1.8; // Max radius of 1.8
+    const count = 55;
+    const temp = Array.from({ length: count }, () => {
+      const radius = Math.random() * 1.9;
       const theta = Math.random() * 2 * Math.PI;
       const phi = Math.acos(2 * Math.random() - 1);
-
       return {
         position: [
           radius * Math.sin(phi) * Math.cos(theta),
           radius * Math.sin(phi) * Math.sin(theta),
           radius * Math.cos(phi),
         ] as [number, number, number],
-        // Use a simple random distribution but with a wide range, ensuring a smooth,
-        // even mix of every size between 0.2 (smallest) and 1.0 (largest).
-        scale: Math.random() * 0.75 + 0.2,
+        scale: Math.random() * 0.72 + 0.18,
         timeOffset: Math.random() * Math.PI * 2,
       };
     });
 
-    // Step 2: Compute centroid
     const center = temp.reduce(
-      (acc, sphere) => {
-        acc.x += sphere.position[0];
-        acc.y += sphere.position[1];
-        acc.z += sphere.position[2];
-        return acc;
-      },
+      (a, s) => ({ x: a.x + s.position[0], y: a.y + s.position[1], z: a.z + s.position[2] }),
       { x: 0, y: 0, z: 0 }
     );
+    center.x /= count; center.y /= count; center.z /= count;
 
-    center.x /= count;
-    center.y /= count;
-    center.z /= count;
-
-    // Step 3: Subtract centroid from each sphere
-    const centered = temp.map((sphere) => ({
-      ...sphere,
-      position: [
-        sphere.position[0] - center.x,
-        sphere.position[1] - center.y,
-        sphere.position[2] - center.z,
-      ] as [number, number, number],
-    }));
-
-    setSpheres(centered);
+    setSpheres(
+      temp.map((s) => ({
+        ...s,
+        position: [s.position[0] - center.x, s.position[1] - center.y, s.position[2] - center.z] as [number, number, number],
+      }))
+    );
   }, []);
 
-  // 2️⃣ Floating + Mouse Interaction
   useFrame((state) => {
     if (!groupRef.current) return;
-
-    // Smooth floating for the entire group
-    groupRef.current.position.y = Math.sin(state.clock.elapsedTime * 0.5) * 0.2;
-
-    // Very smooth easing for mouse interaction
-    const targetX = state.pointer.x * 0.2;
-    const targetY = state.pointer.y * 0.2;
-
-    // Lerp to the target rotation for smooth cursor reaction
-    groupRef.current.rotation.x += (targetY - groupRef.current.rotation.x) * 0.05;
-    groupRef.current.rotation.y += (targetX - groupRef.current.rotation.y) * 0.05;
-
-    // Slight group auto rotation
-    groupRef.current.rotation.y += 0.001;
+    groupRef.current.position.y = Math.sin(state.clock.elapsedTime * 0.45) * 0.18;
+    const tx = state.pointer.x * 0.18;
+    const ty = state.pointer.y * 0.18;
+    groupRef.current.rotation.x += (ty - groupRef.current.rotation.x) * 0.04;
+    groupRef.current.rotation.y += (tx - groupRef.current.rotation.y) * 0.04;
+    groupRef.current.rotation.y += 0.0008;
   });
 
   return (
     <group ref={groupRef}>
-      {spheres.map((sphere, i) => (
-        <Sphere key={i} {...sphere} />
-      ))}
+      {spheres.map((s, i) => <Sphere key={i} {...s} />)}
     </group>
   );
 }
 
 function Sphere({ position, scale, timeOffset }: { position: [number, number, number]; scale: number; timeOffset: number }) {
   const meshRef = useRef<THREE.Mesh>(null);
-  const basePosition = useMemo(() => new THREE.Vector3(...position), [position]);
+  const base = useMemo(() => new THREE.Vector3(...position), [position]);
 
   useFrame((state) => {
     if (!meshRef.current) return;
 
-    // Base floating animation
-    const targetX = basePosition.x + Math.cos(state.clock.elapsedTime + timeOffset) * 0.1;
-    const targetY = basePosition.y + Math.sin(state.clock.elapsedTime + timeOffset) * 0.15;
-    const targetZ = basePosition.z + Math.sin(state.clock.elapsedTime * 0.5 + timeOffset) * 0.1;
-    const targetPos = new THREE.Vector3(targetX, targetY, targetZ);
+    const t = state.clock.elapsedTime;
+    const target = new THREE.Vector3(
+      base.x + Math.cos(t + timeOffset) * 0.09,
+      base.y + Math.sin(t + timeOffset) * 0.13,
+      base.z + Math.sin(t * 0.5 + timeOffset) * 0.09,
+    );
 
-    // Get current world position of the sphere
     const worldPos = new THREE.Vector3();
     meshRef.current.getWorldPosition(worldPos);
 
-    // Calculate cursor world position roughly at the sphere's z-depth
-    const vec = new THREE.Vector3(state.pointer.x, state.pointer.y, 0.5);
-    vec.unproject(state.camera);
+    const vec = new THREE.Vector3(state.pointer.x, state.pointer.y, 0.5).unproject(state.camera);
     const dir = vec.sub(state.camera.position).normalize();
-    const distance = (worldPos.z - state.camera.position.z) / dir.z;
-    const pointerWorldPos = state.camera.position.clone().add(dir.multiplyScalar(distance));
-    // Calculate distance and repel
-    // Mouse goes near -> spheres significantly move away
-    const dist = pointerWorldPos.distanceTo(worldPos);
-    const repelRadius = 3.5; // Increased interaction distance significantly from 1.5
-    if (dist < repelRadius) {
-      // Repel from cursor
-      const repelDir = worldPos.clone().sub(pointerWorldPos).normalize();
-      // Convert world repel direction to local space for the group
-      if (meshRef.current.parent) {
-        repelDir.transformDirection(meshRef.current.parent.matrixWorld.clone().invert());
-      }
-
-      // Much stronger push force based on how close the mouse is
-      const force = (repelRadius - dist) * 2.5; // Multiplied significantly from 0.8
-      targetPos.add(repelDir.multiplyScalar(force));
+    const dist = (worldPos.z - state.camera.position.z) / dir.z;
+    const ptrWorld = state.camera.position.clone().add(dir.multiplyScalar(dist));
+    const d = ptrWorld.distanceTo(worldPos);
+    const repelR = 3.2;
+    if (d < repelR) {
+      const rd = worldPos.clone().sub(ptrWorld).normalize();
+      if (meshRef.current.parent)
+        rd.transformDirection(meshRef.current.parent.matrixWorld.clone().invert());
+      target.add(rd.multiplyScalar((repelR - d) * 2.2));
     }
 
-    // Faster Lerp towards target position for a snappy but smooth bounce back
-    meshRef.current.position.lerp(targetPos, 0.15); // Increased from 0.08
+    meshRef.current.position.lerp(target, 0.13);
   });
 
   return (
     <mesh ref={meshRef} position={position} scale={scale}>
       <sphereGeometry args={[1, 64, 64]} />
       <meshStandardMaterial
-        color="#dcdcdc"
-        roughness={0.3}
-        metalness={0.1}
+        color="#B8CDD8"
+        roughness={0.15}
+        metalness={0.35}
+        opacity={0.82}
+        transparent
+        envMapIntensity={1.2}
       />
     </mesh>
   );
 }
 
-export default function Home() {
-
-  const [no, setNo] = useState(0);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+/* ─────────────────────────────────────────────
+   ROLE CYCLER  — DM Mono + animated underline
+───────────────────────────────────────────── */
+function RoleCycler() {
+  const [idx, setIdx] = useState(0);
+  const [visible, setVisible] = useState(true);
 
   useEffect(() => {
-    const intervalId = setInterval(() => {
-      setNo((prev) => {
-        if (prev >= roles.length - 1)
-          return 0
-        else
-          return prev + 1
-      });
-    }, 5000);
-    return () => clearInterval(intervalId);
+    const id = setInterval(() => {
+      setVisible(false);
+      setTimeout(() => {
+        setIdx((p) => (p + 1) % roles.length);
+        setVisible(true);
+      }, 420);
+    }, 4200);
+    return () => clearInterval(id);
   }, []);
 
   return (
-    <>
-      <main className="relative h-screen w-full overflow-hidden bg-gradient-to-b from-[#B0BEC5] to-[#FFFFFF]">
-
-        <div className="absolute top-9 left-12 z-50 cursor-pointer">
-          <svg width="43" height="43" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-            <circle
-              cx="50"
-              cy="50"
-              r="46"
-              stroke="#F5F5F5"
-              strokeWidth="3"
-              fill="#F5F5F5"
-            />
-
-            <text
-              x="50%"
-              y="55%"
-              textAnchor="middle"
-              dominantBaseline="middle"
-              fontFamily="Inter, sans-serif"
-              fontSize="65"
-              fontWeight="400"
-              fill="#B0BEC5"
-              letterSpacing="-2"
-            >
-              T.
-            </text>
-          </svg>
-        </div>
-
-        <div
-          onClick={() => {
-            setIsModalOpen(true)
+    <div style={{ display: "flex", alignItems: "center", gap: "10px", marginTop: "6px" }}>
+      {/* accent dash */}
+      <span
+        style={{
+          display: "inline-block",
+          width: "28px",
+          height: "1px",
+          background: "rgba(245,245,245,0.55)",
+          flexShrink: 0,
+        }}
+      />
+      <div style={{ position: "relative", overflow: "hidden" }}>
+        <motion.p
+          key={idx}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: visible ? 1 : 0, y: visible ? 0 : -10 }}
+          transition={{ duration: 0.38, ease: [0.25, 0.1, 0.25, 1] }}
+          style={{
+            fontFamily: "'DM Mono', 'Courier New', monospace",
+            fontWeight: 300,
+            fontSize: "clamp(13px, 1.6vw, 18px)",
+            letterSpacing: "0.18em",
+            color: "rgba(226,232,240,0.85)",
+            margin: 0,
+            textTransform: "uppercase",
           }}
-          className="absolute z-50 top-9 right-11 cursor-pointer">
-          <svg
-            width="40"
-            height="40"
-            viewBox="0 0 40 40"
-            xmlns="http://www.w3.org/2000/svg"
+        >
+          {roles[idx]}
+        </motion.p>
+        {/* animated underline */}
+        <motion.span
+          key={`u-${idx}`}
+          initial={{ scaleX: 0 }}
+          animate={{ scaleX: 1 }}
+          transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1], delay: 0.18 }}
+          style={{
+            display: "block",
+            height: "1px",
+            background: "rgba(245,245,245,0.4)",
+            transformOrigin: "left center",
+            marginTop: "3px",
+          }}
+        />
+      </div>
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────────
+   SCROLL CTA
+───────────────────────────────────────────── */
+function ScrollCTA() {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.9, delay: 1.6, ease: "easeOut" }}
+      style={{
+        position: "absolute",
+        bottom: "42px",
+        left: "50%",
+        transform: "translateX(-50%)",
+        zIndex: 20,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        gap: "10px",
+        cursor: "pointer",
+        userSelect: "none",
+      }}
+    >
+      <span
+        style={{
+          fontFamily: "'DM Mono', monospace",
+          fontSize: "10px",
+          letterSpacing: "0.25em",
+          textTransform: "uppercase",
+          color: "rgba(245,245,245,0.45)",
+        }}
+      >
+        View Work
+      </span>
+      {/* animated chevron */}
+      <motion.div
+        animate={{ y: [0, 6, 0] }}
+        transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+      >
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M3 6L8 11L13 6" stroke="rgba(245,245,245,0.4)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </motion.div>
+    </motion.div>
+  );
+}
+
+/* ─────────────────────────────────────────────
+   NAV — refined logo mark + hamburger
+───────────────────────────────────────────── */
+function Nav({ onMenuOpen }: { onMenuOpen: () => void }) {
+  return (
+    <motion.nav
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 1, delay: 0.3 }}
+      style={{
+        position: "absolute",
+        top: 0,
+        left: 0,
+        right: 0,
+        zIndex: 50,
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        padding: "32px 44px",
+      }}
+    >
+      {/* Logo mark */}
+      <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+        <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+          <rect x="0.75" y="0.75" width="34.5" height="34.5" rx="2.25" stroke="rgba(245,245,245,0.3)" strokeWidth="1.5" />
+          <text
+            x="50%"
+            y="53%"
+            textAnchor="middle"
+            dominantBaseline="middle"
+            fontFamily="'Cormorant Garamond', Georgia, serif"
+            fontSize="18"
+            fontWeight="500"
+            fill="rgba(245,245,245,0.9)"
+            letterSpacing="0"
           >
-            <line
-              x1="8"
-              y1="15"
-              x2="34"
-              y2="15"
-              stroke="#F5F5F5"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-            />
-            <line
-              x1="8"
-              y1="25"
-              x2="34"
-              y2="25"
-              stroke="#F5F5F5"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-            />
-          </svg>
-        </div>
+            T
+          </text>
+        </svg>
+        <span
+          style={{
+            fontFamily: "'DM Mono', monospace",
+            fontSize: "10px",
+            letterSpacing: "0.22em",
+            textTransform: "uppercase",
+            color: "rgba(245,245,245,0.4)",
+          }}
+        >
+          Portfolio
+        </span>
+      </div>
 
-        {/* Background Gradient & Canvas */}
-        <div className="absolute inset-0 z-0">
+      {/* Hamburger */}
+      <button
+        onClick={onMenuOpen}
+        aria-label="Open menu"
+        style={{
+          background: "none",
+          border: "none",
+          cursor: "pointer",
+          padding: "6px",
+          display: "flex",
+          flexDirection: "column",
+          gap: "5px",
+        }}
+      >
+        {[0, 1].map((i) => (
+          <motion.span
+            key={i}
+            whileHover={{ scaleX: i === 0 ? 0.65 : 1.25 }}
+            transition={{ duration: 0.25 }}
+            style={{
+              display: "block",
+              width: i === 0 ? "22px" : "14px",
+              height: "1.5px",
+              background: "rgba(245,245,245,0.75)",
+              borderRadius: "2px",
+              transformOrigin: "left center",
+            }}
+          />
+        ))}
+      </button>
+    </motion.nav>
+  );
+}
+
+/* ─────────────────────────────────────────────
+   PAGE
+───────────────────────────────────────────── */
+export default function Home() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  return (
+    <>
+      {/* Google Fonts */}
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Mono:wght@300;400&display=swap');
+      `}</style>
+
+      <main
+        style={{
+          position: "relative",
+          height: "100svh",
+          width: "100%",
+          overflow: "hidden",
+          background: "linear-gradient(160deg, #4A6374 0%, #5C7A8C 18%, #6F8E9F 35%, #87A5B5 52%, #A5BDC9 66%, #C2D2DA 79%, #DDE6EB 90%, #EFF3F5 100%)",
+        }}
+      >
+        <GrainOverlay />
+
+        <Nav onMenuOpen={() => setIsModalOpen(true)} />
+
+        {/* Soft radial vignette */}
+        <div
+          aria-hidden
+          style={{
+            position: "absolute",
+            inset: 0,
+            zIndex: 2,
+            pointerEvents: "none",
+            background: "radial-gradient(ellipse 70% 70% at 50% 50%, transparent 40%, rgba(40,58,70,0.22) 100%)",
+          }}
+        />
+
+        {/* 3-D Canvas */}
+        <div style={{ position: "absolute", inset: 0, zIndex: 0 }}>
           <Canvas camera={{ position: [0, 0, 8], fov: 35 }}>
-            <ambientLight intensity={0.6} />
-            <directionalLight position={[5, 5, 5]} intensity={1.2} />
-
+            <ambientLight intensity={0.7} />
+            <directionalLight position={[6, 6, 4]} intensity={1.4} />
+            <directionalLight position={[-4, -2, -4]} intensity={0.3} color="#a8c0d0" />
             <BubbleCluster />
           </Canvas>
         </div>
 
-        {/* Big bold text overlay */}
-        <div className="pointer-events-none relative z-10 flex flex-col h-full items-center justify-center">
-          <h1 className="text-[12.5vw] font-black font-space-grotesk tracking-tigh text-[#F5F5F5] drop-shadow-sm">
-            THENURI
-          </h1>
-          <p className="text-[3.5vw] font-poppins font-extralight text-white tracking-wider drop-shadow-sm translate-y-[-10px]">{roles[no]}</p>
+        {/* Hero text */}
+        <div
+          style={{
+            pointerEvents: "none",
+            position: "relative",
+            zIndex: 10,
+            display: "flex",
+            flexDirection: "column",
+            height: "100%",
+            alignItems: "center",
+            justifyContent: "center",
+            transform: "translateY(-16px)",
+          }}
+        >
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1.1, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
+            style={{ textAlign: "center" }}
+          >
+            {/* Pre-title */}
+            <p
+              style={{
+                fontFamily: "'DM Mono', monospace",
+                fontSize: "clamp(10px, 1vw, 12px)",
+                letterSpacing: "0.3em",
+                textTransform: "uppercase",
+                color: "rgba(245,245,245,0.45)",
+                margin: "0 0 18px 0",
+              }}
+            >
+              — Full-Stack Developer
+            </p>
+
+            {/* Name */}
+            <h1
+              style={{
+                fontFamily: "'Cormorant Garamond', Georgia, serif",
+                fontWeight: 300,
+                fontStyle: "italic",
+                fontSize: "clamp(72px, 13vw, 160px)",
+                lineHeight: 0.9,
+                letterSpacing: "-0.02em",
+                color: "#F5F5F5",
+                margin: 0,
+                textShadow: "0 2px 40px rgba(40,58,70,0.18)",
+              }}
+            >
+              Thenuri
+            </h1>
+
+            {/* Role cycler */}
+            <RoleCycler />
+          </motion.div>
         </div>
 
+        {/* Scroll CTA */}
+        <ScrollCTA />
+
+        {/* Navigation Modal */}
         <AnimatePresence>
           {isModalOpen && <NavigationModal onClose={() => setIsModalOpen(false)} />}
         </AnimatePresence>
