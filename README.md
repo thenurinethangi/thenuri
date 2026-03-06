@@ -6,6 +6,6 @@ This repository contains my professional portfolio, which serves as my digital p
 
 ---
 
-**Live Portfolio:** https://portfolio-link.com
+**Live Portfolio:** https://thenuri.me
 
 I am always open to new opportunities, collaborations, and discussions regarding tech and software engineering. Feel free to reach out!
