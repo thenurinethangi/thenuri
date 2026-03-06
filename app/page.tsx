@@ -13,9 +13,7 @@ const roles = [
   "Mobile Developer",
 ];
 
-/* ─────────────────────────────────────────────
-   GRAIN OVERLAY  (SVG noise rendered via CSS)
-───────────────────────────────────────────── */
+/* GRAIN OVERLAY  (SVG noise rendered via CSS) */
 function GrainOverlay() {
   return (
     <div
@@ -34,9 +32,7 @@ function GrainOverlay() {
   );
 }
 
-/* ─────────────────────────────────────────────
-   3-D BUBBLE CLUSTER
-───────────────────────────────────────────── */
+/* 3-D BUBBLE CLUSTER */
 function BubbleCluster() {
   const groupRef = useRef<THREE.Group>(null);
   const [spheres, setSpheres] = useState<any[]>([]);
@@ -137,9 +133,7 @@ function Sphere({ position, scale, timeOffset }: { position: [number, number, nu
   );
 }
 
-/* ─────────────────────────────────────────────
-   ROLE CYCLER  — DM Mono + animated underline
-───────────────────────────────────────────── */
+/* ROLE CYCLER  — DM Mono + animated underline */
 function RoleCycler() {
   const [idx, setIdx] = useState(0);
   const [visible, setVisible] = useState(true);
@@ -204,9 +198,7 @@ function RoleCycler() {
   );
 }
 
-/* ─────────────────────────────────────────────
-   SCROLL CTA
-───────────────────────────────────────────── */
+/* SCROLL CTA */
 function ScrollCTA() {
   return (
     <motion.div
@@ -251,9 +243,7 @@ function ScrollCTA() {
   );
 }
 
-/* ─────────────────────────────────────────────
-   NAV — refined logo mark + hamburger
-───────────────────────────────────────────── */
+/* NAV — refined logo mark + hamburger */
 function Nav({ onMenuOpen }: { onMenuOpen: () => void }) {
   return (
     <motion.nav
@@ -337,9 +327,7 @@ function Nav({ onMenuOpen }: { onMenuOpen: () => void }) {
   );
 }
 
-/* ─────────────────────────────────────────────
-   PAGE
-───────────────────────────────────────────── */
+/* PAGE */
 export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
