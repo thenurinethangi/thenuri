@@ -95,6 +95,15 @@ export default function Contact() {
                 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Mono:wght@300;400&display=swap');
                 .contact-scroll::-webkit-scrollbar { display: none; }
                 .contact-scroll { -ms-overflow-style: none; scrollbar-width: none; }
+                @media (max-width: 800px) {
+                    .nav-bar { padding: 24px 24px !important; }
+                    .contact-header { padding: 110px 24px 0 !important; }
+                    .contact-grid { grid-template-columns: 1fr !important; gap: 40px !important; }
+                    .contact-left { border-right: none !important; border-bottom: 1px solid rgba(255,255,255,0.1) !important; padding: 0 0 40px 0 !important; }
+                    .contact-right { padding: 40px 0 0 0 !important; }
+                    .form-row { grid-template-columns: 1fr !important; }
+                    .contact-footer { padding: 0 24px 60px !important; }
+                }
             `}</style>
 
             <section style={{
@@ -109,6 +118,7 @@ export default function Contact() {
 
                 {/* NAV */}
                 <motion.nav
+                    className="nav-bar"
                     initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1, delay: 0.2 }}
                     style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 50, display: "flex", justifyContent: "space-between", alignItems: "center", padding: "32px 44px", pointerEvents: "none" }}
                 >
@@ -133,6 +143,7 @@ export default function Contact() {
 
                     {/* ── TOP SECTION: headline full width ── */}
                     <motion.div
+                        className="contact-header"
                         initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 1, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
                         style={{ padding: "140px 44px 0", maxWidth: "1100px", margin: "0 auto" }}
@@ -176,6 +187,7 @@ export default function Contact() {
 
                     {/* ── BOTTOM SECTION: socials + form ── */}
                     <motion.div
+                        className="contact-grid"
                         initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 1, delay: 0.6, ease: [0.22, 1, 0.36, 1] }}
                         style={{
@@ -185,10 +197,11 @@ export default function Contact() {
                             gap: "0",
                             borderBottom: "1px solid rgba(255,255,255,0.1)",
                             marginBottom: "60px",
+                            padding: "0 44px",
                         }}
                     >
                         {/* LEFT — socials */}
-                        <div style={{
+                        <div className="contact-left" style={{
                             borderRight: "1px solid rgba(255,255,255,0.1)",
                             padding: "48px 44px 48px 0",
                             display: "flex", flexDirection: "column" as const, justifyContent: "space-between",
@@ -247,7 +260,7 @@ export default function Contact() {
                         </div>
 
                         {/* RIGHT — dark form panel */}
-                        <div style={{ padding: "40px 0 40px 48px" }}>
+                        <div className="contact-right" style={{ padding: "40px 0 40px 48px" }}>
                             <div style={{
                                 background: "rgba(255,255,255,0.12)",
                                 backdropFilter: "blur(24px)",
@@ -274,7 +287,7 @@ export default function Contact() {
                                 </div>
 
                                 {/* Fields */}
-                                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px" }}>
+                                <div className="form-row" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px" }}>
                                     <Field id="first_name" label="First Name" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
                                     <Field id="last_name" label="Last Name" value={lastName} onChange={(e) => setLastName(e.target.value)} />
                                 </div>
@@ -316,7 +329,7 @@ export default function Contact() {
                     </motion.div>
 
                     {/* Footer */}
-                    <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "0 44px 80px", display: "flex", alignItems: "center", gap: "20px" }}>
+                    <div className="contact-footer" style={{ maxWidth: "1100px", margin: "0 auto", padding: "0 44px 80px", display: "flex", alignItems: "center", gap: "20px" }}>
                         <div style={{ flex: 1, height: "1px", background: "rgba(245,245,245,0.08)" }} />
                         <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "9px", letterSpacing: "0.25em", textTransform: "uppercase" as const, color: "rgba(245,245,245,0.2)" }}>
                             Always Open to the Right Conversation

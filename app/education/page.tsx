@@ -73,6 +73,7 @@ function EduRow({ item, index }: { item: typeof education[0]; index: number }) {
             transition={{ duration: 0.7, delay: index * 0.09, ease: [0.22, 1, 0.36, 1] }}
             onMouseEnter={() => setHovered(true)}
             onMouseLeave={() => setHovered(false)}
+            className="edu-row"
             style={{
                 borderBottom: "1px solid rgba(255,255,255,0.09)",
                 padding: "36px 0",
@@ -157,6 +158,7 @@ function EduRow({ item, index }: { item: typeof education[0]; index: number }) {
 
             {/* Right arrow — appears on hover */}
             <motion.div
+                className="edu-arrow"
                 animate={{ opacity: hovered ? 1 : 0, x: hovered ? 0 : 6 }}
                 transition={{ duration: 0.22 }}
                 style={{ paddingTop: "6px" }}
@@ -183,6 +185,7 @@ function AwardRow({ item, index }: { item: typeof awards[0]; index: number }) {
             transition={{ duration: 0.65, delay: index * 0.1, ease: [0.22, 1, 0.36, 1] }}
             onMouseEnter={() => setHovered(true)}
             onMouseLeave={() => setHovered(false)}
+            className="award-row"
             style={{
                 borderBottom: "1px solid rgba(255,255,255,0.09)",
                 padding: "28px 0",
@@ -268,6 +271,14 @@ export default function Education() {
                 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Mono:wght@300;400&display=swap');
                 .edu-scroll::-webkit-scrollbar { display: none; }
                 .edu-scroll { -ms-overflow-style: none; scrollbar-width: none; }
+                @media (max-width: 800px) {
+                    .nav-bar { padding: 24px 24px !important; }
+                    .edu-scroll { padding: 110px 24px 80px !important; }
+                    .edu-content { padding-left: 0 !important; }
+                    .edu-row { grid-template-columns: 1fr !important; gap: 16px !important; padding: 24px 0 !important; }
+                    .award-row { grid-template-columns: 1fr !important; gap: 12px !important; padding: 20px 0 !important; }
+                    .edu-arrow { display: none !important; }
+                }
             `}</style>
 
             <section style={{
@@ -282,6 +293,7 @@ export default function Education() {
 
                 {/* NAV */}
                 <motion.nav
+                    className="nav-bar"
                     initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1, delay: 0.2 }}
                     style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 50, display: "flex", justifyContent: "space-between", alignItems: "center", padding: "32px 44px", pointerEvents: "none" }}
                 >
@@ -303,7 +315,7 @@ export default function Education() {
 
                 {/* SCROLL */}
                 <div className="edu-scroll" style={{ position: "absolute", inset: 0, overflowY: "auto", zIndex: 10, padding: "130px 44px 100px" }}>
-                    <div style={{ maxWidth: "860px", margin: "0 auto", paddingLeft: "44px" }}>
+                    <div className="edu-content" style={{ maxWidth: "860px", margin: "0 auto", paddingLeft: "44px" }}>
 
                         {/* Header */}
                         <motion.div

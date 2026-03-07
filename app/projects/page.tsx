@@ -124,6 +124,7 @@ function ProjectRow({ project, index }: { project: typeof projects[0]; index: nu
 
     return (
         <motion.div
+            className="proj-row"
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-60px" }}
@@ -158,7 +159,7 @@ function ProjectRow({ project, index }: { project: typeof projects[0]; index: nu
 
 function VisualPanel({ project, hovered }: { project: typeof projects[0]; hovered: boolean }) {
     return (
-        <div style={{
+        <div className="proj-visual" style={{
             position: "relative",
             background: hovered ? "#1C2B33" : "rgba(255,255,255,0.04)",
             borderRight: "1px solid rgba(255,255,255,0.08)",
@@ -271,7 +272,7 @@ function VisualPanel({ project, hovered }: { project: typeof projects[0]; hovere
 
 function InfoPanel({ project, hovered, isEven }: { project: typeof projects[0]; hovered: boolean; isEven: boolean }) {
     return (
-        <div style={{
+        <div className="proj-info" style={{
             padding: "52px 56px",
             display: "flex",
             flexDirection: "column" as const,
@@ -415,9 +416,14 @@ export default function Projects() {
                 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400&family=DM+Mono:wght@300;400&display=swap');
                 .proj-scroll::-webkit-scrollbar { display: none; }
                 .proj-scroll { -ms-overflow-style: none; scrollbar-width: none; }
-                @media (max-width: 680px) {
+                @media (max-width: 800px) {
+                    .nav-bar { padding: 24px 24px !important; }
+                    .proj-scroll { padding-top: 80px !important; }
+                    .proj-header { padding: 0 24px 40px !important; }
                     .proj-row { grid-template-columns: 1fr !important; }
-                    .proj-row > div:first-child { min-height: 200px !important; border-right: none !important; border-bottom: 1px solid rgba(255,255,255,0.08) !important; }
+                    .proj-visual { min-height: 240px !important; border-right: none !important; border-bottom: 1px solid rgba(255,255,255,0.08) !important; }
+                    .proj-info { padding: 40px 24px !important; border-left: none !important; border-right: none !important; min-height: auto !important; }
+                    .proj-footer { padding: 40px 24px 80px !important; }
                 }
             `}</style>
 
@@ -434,6 +440,7 @@ export default function Projects() {
 
                 {/* NAV */}
                 <motion.nav
+                    className="nav-bar"
                     initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1, delay: 0.2 }}
                     style={{
                         position: "fixed", top: 0, left: 0, right: 0, zIndex: 50,
@@ -462,6 +469,7 @@ export default function Projects() {
 
                     {/* Header */}
                     <motion.div
+                        className="proj-header"
                         initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 1, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
                         style={{ padding: "0 44px 60px", maxWidth: "980px", margin: "0 auto" }}
@@ -495,7 +503,7 @@ export default function Projects() {
                     </div>
 
                     {/* Footer */}
-                    <div style={{ padding: "60px 44px 100px", display: "flex", alignItems: "center", gap: "20px", maxWidth: "980px", margin: "0 auto" }}>
+                    <div className="proj-footer" style={{ padding: "60px 44px 100px", display: "flex", alignItems: "center", gap: "20px", maxWidth: "980px", margin: "0 auto" }}>
                         <div style={{ flex: 1, height: "1px", background: "rgba(245,245,245,0.1)" }} />
                         <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "9px", letterSpacing: "0.25em", textTransform: "uppercase" as const, color: "rgba(245,245,245,0.22)" }}>Always Building</span>
                         <div style={{ flex: 1, height: "1px", background: "rgba(245,245,245,0.1)" }} />
