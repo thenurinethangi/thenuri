@@ -26,7 +26,7 @@ const socials = [
 /* ─────────────────────────────────────────────
    FIELD
 ───────────────────────────────────────────── */
-function Field({ id, label, type = "text", rows }: { id: string; label: string; type?: string; rows?: number }) {
+function Field({ id, label, type = "text", rows, value, onChange }: { id: string; label: string; type?: string; rows?: number; value: string; onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void }) {
     const [focused, setFocused] = useState(false)
 
     const base: React.CSSProperties = {
@@ -56,8 +56,8 @@ function Field({ id, label, type = "text", rows }: { id: string; label: string; 
                 {label}
             </label>
             {rows
-                ? <textarea id={id} rows={rows} style={base} onFocus={() => setFocused(true)} onBlur={() => setFocused(false)} />
-                : <input id={id} type={type} style={base} onFocus={() => setFocused(true)} onBlur={() => setFocused(false)} />
+                ? <textarea id={id} rows={rows} style={base} value={value} onChange={onChange} onFocus={() => setFocused(true)} onBlur={() => setFocused(false)} />
+                : <input id={id} type={type} style={base} value={value} onChange={onChange} onFocus={() => setFocused(true)} onBlur={() => setFocused(false)} />
             }
         </div>
     )
@@ -69,6 +69,25 @@ function Field({ id, label, type = "text", rows }: { id: string; label: string; 
 export default function Contact() {
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [hoverBtn, setHoverBtn] = useState(false)
+
+    // Form state
+    const [firstName, setFirstName] = useState("")
+    const [lastName, setLastName] = useState("")
+    const [email, setEmail] = useState("")
+    const [subject, setSubject] = useState("")
+    const [message, setMessage] = useState("")
+
+    const handleSend = (e: React.MouseEvent) => {
+        e.preventDefault()
+        // Here you would normally handle the API request to send the email
+
+        // Clear all fields
+        setFirstName("")
+        setLastName("")
+        setEmail("")
+        setSubject("")
+        setMessage("")
+    }
 
     return (
         <>
@@ -256,12 +275,12 @@ export default function Contact() {
 
                                 {/* Fields */}
                                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px" }}>
-                                    <Field id="first_name" label="First Name" />
-                                    <Field id="last_name" label="Last Name" />
+                                    <Field id="first_name" label="First Name" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
+                                    <Field id="last_name" label="Last Name" value={lastName} onChange={(e) => setLastName(e.target.value)} />
                                 </div>
-                                <Field id="email" label="Email Address" type="email" />
-                                <Field id="subject" label="Subject" />
-                                <Field id="message" label="Message" rows={3} />
+                                <Field id="email" label="Email Address" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+                                <Field id="subject" label="Subject" value={subject} onChange={(e) => setSubject(e.target.value)} />
+                                <Field id="message" label="Message" rows={3} value={message} onChange={(e) => setMessage(e.target.value)} />
 
                                 {/* Submit */}
                                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", paddingTop: "8px", borderTop: "1px solid rgba(255,255,255,0.18)" }}>
@@ -272,7 +291,7 @@ export default function Contact() {
                                         onHoverStart={() => setHoverBtn(true)}
                                         onHoverEnd={() => setHoverBtn(false)}
                                         whileTap={{ scale: 0.97 }}
-                                        onClick={(e) => e.preventDefault()}
+                                        onClick={handleSend}
                                         style={{
                                             display: "flex", alignItems: "center", gap: "10px",
                                             background: hoverBtn ? "rgba(255,255,255,0.28)" : "rgba(255,255,255,0.16)",
