@@ -74,6 +74,45 @@ const projects = [
         accent: "#D1BEDb",
         letter: "A",
     },
+    {
+        index: "05",
+        status: "Shipped",
+        period: "Sep 2025",
+        title: "Chef Claude",
+        subtitle: "AI-Powered Culinary Intelligence",
+        description: "Sophisticated web application leveraging large language models (Mistral-7B) to synthesize structured recipes from available household ingredients, minimizing food waste.",
+        stack: ["React 19", "Vite", "Mistral AI", "Bootstrap 5"],
+        github: "https://github.com/thenurinethangi/Chef-Claude",
+        demo: null,
+        accent: "#E2B897",
+        letter: "C",
+    },
+    {
+        index: "06",
+        status: "Shipped",
+        period: "Apr 2025",
+        title: "Serenity Therapy Center",
+        subtitle: "End-to-End Clinic Automation",
+        description: "A production-grade JavaFX desktop application for mental health clinics, featuring patient onboarding, conflict-free scheduling, RBAC, and financial tracking via Hibernate and MySQL.",
+        stack: ["Java", "JavaFX", "Hibernate", "MySQL", "Maven"],
+        github: "https://github.com/thenurinethangi/Serenity_Mental_Health_Therapy_Center_System",
+        demo: null,
+        accent: "#A0B5A7",
+        letter: "S",
+    },
+    {
+        index: "07",
+        status: "Shipped",
+        period: "Dec 2025 – Jan 2026",
+        title: "Risk Stratification",
+        subtitle: "Readmission Predictive Modeling",
+        description: "Data science and predictive analysis model processing over 100k diabetic patient records to identify the root operational drivers of hospital readmissions and assign targeted Vitality Complexity Index (VCI) risk scores.",
+        stack: ["Python", "Pandas", "NumPy", "Seaborn", "BeautifulSoup"],
+        github: "https://github.com/thenurinethangi/VHN-Readmission-Predictive-Model",
+        demo: null,
+        accent: "#C3AED6",
+        letter: "R",
+    },
 ]
 
 /* ─────────────────────────────────────────────
@@ -149,7 +188,8 @@ function VisualPanel({ project, hovered }: { project: typeof projects[0]; hovere
                 // Use a simpler approach for hex color with opacity
                 className=""
             >
-                <span style={{ color: hovered ? "transparent" : "transparent",
+                <span style={{
+                    color: hovered ? "transparent" : "transparent",
                     WebkitTextStroke: `1px ${hovered ? project.accent.replace(/.$/, "28)").replace("#", "rgba(").replace("rgba(", "rgba(") : "rgba(255,255,255,0.06)"}`,
                     fontSize: "clamp(180px, 22vw, 280px)",
                     fontFamily: "'Cormorant Garamond', Georgia, serif",
