@@ -135,7 +135,7 @@ export default function About() {
 
                                 {/* CV button */}
                                 <motion.a
-                                    href="/cv.pdf"
+                                    href="/Thenuri_Nanayakkara_Final_CV.pdf"
                                     download
                                     onHoverStart={() => setCvHovered(true)}
                                     onHoverEnd={() => setCvHovered(false)}
@@ -266,7 +266,7 @@ function PillarPanel({ item, delay }: { item: typeof pillars[0]; delay: number }
         >
             {/* Top highlight on hover */}
             {hovered && (
-                <div aria-hidden style={{ position: "absolute", top: 0, left: 0, right: 0, height: "1px", background: `linear-gradient(90deg, transparent, ${item.accent.replace("0.9","0.3")}, transparent)`, pointerEvents: "none" }} />
+                <div aria-hidden style={{ position: "absolute", top: 0, left: 0, right: 0, height: "1px", background: `linear-gradient(90deg, transparent, ${item.accent.replace("0.9", "0.3")}, transparent)`, pointerEvents: "none" }} />
             )}
 
             {/* Accent orb */}
