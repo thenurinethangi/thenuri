@@ -22,39 +22,46 @@ function GrainOverlay() {
 }
 
 const typeConfig: Record<string, { label: string; accent: string }> = {
-    degree:      { label: "Degree",      accent: "rgba(171,205,219,0.9)" },
+    degree: { label: "Degree", accent: "rgba(171,205,219,0.9)" },
     certificate: { label: "Certificate", accent: "rgba(186,213,186,0.9)" },
-    award:       { label: "Award",       accent: "rgba(219,196,171,0.9)" },
+    award: { label: "Award", accent: "rgba(219,196,171,0.9)" },
 }
 
 const educationData = [
     {
         id: 1, type: "degree",
-        year: "2020 – 2024",
-        title: "Bachelor of Science in Software Engineering",
-        institution: "University of Technology, Sydney",
-        description: "Graduated with Honors. Specialized in distributed systems and artificial intelligence. Led the university coding club and organized three hackathons.",
+        year: "Feb 2024 - Present",
+        title: "Graduate Diploma In Software Engineering",
+        institution: "Institute of Software Engineering (IJSE)",
+        description: "Focused on scalable system design and enterprise architecture. Specialized in advanced full-stack engineering principles.",
     },
     {
         id: 2, type: "certificate",
-        year: "2023",
-        title: "AWS Certified Solutions Architect",
-        institution: "Amazon Web Services",
-        description: "Demonstrated proficiency in designing scalable, highly available, and fault-tolerant systems on AWS.",
+        year: "Feb 2023 - Feb 2024",
+        title: "Diploma In English Language And Literature",
+        institution: "Aquinas College of Higher Studies",
+        description: "Refined professional communication and critical analysis.",
     },
     {
-        id: 3, type: "degree",
-        year: "2018 – 2020",
-        title: "Advanced Diploma in Information Technology",
-        institution: "Tech Institute of Excellence",
-        description: "Valedictorian. Built foundational skills in web development, database management, and network security.",
+        id: 3, type: "certificate",
+        year: "Jan 2008 - Jan 2022",
+        title: "G. C. E. Advanced Level - Science Stream (2022)",
+        institution: "Matara Central College",
+        description: "Completed secondary education in the Science stream.",
     },
     {
         id: 4, type: "award",
-        year: "2019",
-        title: "First Place — National App Challenge",
-        institution: "Tech Innovations Council",
-        description: "Developed an award-winning mobile application focused on sustainable urban commuting.",
+        year: "2024",
+        title: "Genesys III Hackathon — First Runner-Up",
+        institution: "CERTIFICATIONS & AWARDS",
+        description: "Secured First Runner-Up position in the Genesys III Hackathon 2024.",
+    },
+    {
+        id: 5, type: "award",
+        year: "2025",
+        title: "Circle Edge — Finalist",
+        institution: "CERTIFICATIONS & AWARDS",
+        description: "Selected as a finalist in the Circle Edge 2025 competition.",
     },
 ]
 
