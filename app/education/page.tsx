@@ -3,185 +3,262 @@
 import NavigationModal from "@/components/NavigationModal"
 import { motion, AnimatePresence } from "framer-motion"
 import { useState } from "react"
-import { FaGraduationCap, FaCertificate, FaAward } from "react-icons/fa"
 
-/* ─────────────────────────────────────────────
-   GRAIN OVERLAY
-───────────────────────────────────────────── */
 function GrainOverlay() {
     return (
-        <div
-            aria-hidden
-            style={{
-                position: "fixed", inset: 0, zIndex: 5, pointerEvents: "none", opacity: 0.045,
-                backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
-                backgroundRepeat: "repeat", backgroundSize: "180px 180px",
-            }}
-        />
+        <div aria-hidden style={{
+            position: "fixed", inset: 0, zIndex: 5, pointerEvents: "none", opacity: 0.045,
+            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
+            backgroundRepeat: "repeat", backgroundSize: "180px 180px",
+        }} />
     )
 }
 
-const typeConfig: Record<string, { label: string; accent: string }> = {
-    degree: { label: "Degree", accent: "rgba(171,205,219,0.9)" },
-    certificate: { label: "Certificate", accent: "rgba(186,213,186,0.9)" },
-    award: { label: "Award", accent: "rgba(219,196,171,0.9)" },
-}
-
-const educationData = [
+/* ─────────────────────────────────────────────
+   DATA
+───────────────────────────────────────────── */
+const education = [
     {
-        id: 1, type: "degree",
-        year: "Feb 2024 - Present",
+        year: "Feb 2024 – Present",
         title: "Graduate Diploma In Software Engineering",
         institution: "Institute of Software Engineering (IJSE)",
         description: "Focused on scalable system design and enterprise architecture. Specialized in advanced full-stack engineering principles.",
+        type: "degree",
+        accent: "rgba(171,205,219,0.9)",
     },
     {
-        id: 2, type: "certificate",
-        year: "Feb 2023 - Feb 2024",
+        year: "Feb 2023 – Feb 2024",
         title: "Diploma In English Language And Literature",
         institution: "Aquinas College of Higher Studies",
         description: "Refined professional communication and critical analysis.",
+        type: "certificate",
+        accent: "rgba(186,213,186,0.9)",
     },
     {
-        id: 3, type: "certificate",
-        year: "Jan 2008 - Jan 2022",
-        title: "G. C. E. Advanced Level - Science Stream (2022)",
+        year: "Jan 2008 – Jan 2022",
+        title: "G.C.E. Advanced Level — Science Stream",
         institution: "Matara Central College",
         description: "Completed secondary education in the Science stream.",
+        type: "degree",
+        accent: "rgba(171,205,219,0.9)",
     },
+]
+
+const awards = [
     {
-        id: 4, type: "award",
         year: "2024",
         title: "Genesys III Hackathon — First Runner-Up",
-        institution: "CERTIFICATIONS & AWARDS",
-        description: "Secured First Runner-Up position in the Genesys III Hackathon 2024.",
+        body: "Secured First Runner-Up position competing against top engineering teams.",
+        accent: "rgba(219,196,171,0.9)",
     },
     {
-        id: 5, type: "award",
         year: "2025",
         title: "Circle Edge — Finalist",
-        institution: "CERTIFICATIONS & AWARDS",
-        description: "Selected as a finalist in the Circle Edge 2025 competition.",
+        body: "Selected as a finalist in the Circle Edge 2025 national competition.",
+        accent: "rgba(219,196,171,0.9)",
     },
 ]
 
 /* ─────────────────────────────────────────────
-   CARD
+   EDUCATION ROW
 ───────────────────────────────────────────── */
-function EducationCard({ item, index }: { item: typeof educationData[0]; index: number }) {
+function EduRow({ item, index }: { item: typeof education[0]; index: number }) {
     const [hovered, setHovered] = useState(false)
-    const cfg = typeConfig[item.type]
 
     return (
         <motion.div
-            initial={{ opacity: 0, y: 28 }}
+            initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-50px" }}
-            transition={{ duration: 0.7, delay: index * 0.1, ease: [0.22, 1, 0.36, 1] }}
+            viewport={{ once: true, margin: "-40px" }}
+            transition={{ duration: 0.7, delay: index * 0.09, ease: [0.22, 1, 0.36, 1] }}
             onMouseEnter={() => setHovered(true)}
             onMouseLeave={() => setHovered(false)}
             style={{
-                background: hovered ? "#1C2B33" : "rgba(255,255,255,0.07)",
-                border: `1px solid ${hovered ? "rgba(255,255,255,0.1)" : "rgba(255,255,255,0.11)"}`,
-                borderRadius: "16px",
-                padding: "40px 44px",
-                position: "relative",
-                overflow: "hidden",
+                borderBottom: "1px solid rgba(255,255,255,0.09)",
+                padding: "36px 0",
+                display: "grid",
+                gridTemplateColumns: "160px 1fr auto",
+                gap: "40px",
+                alignItems: "start",
                 cursor: "default",
-                transition: "background 0.4s, border-color 0.4s",
-                boxShadow: hovered ? "0 24px 64px rgba(20,35,44,0.35)" : "none",
+                transition: "border-color 0.3s",
+                borderColor: hovered ? "rgba(255,255,255,0.18)" : "rgba(255,255,255,0.09)",
+                position: "relative",
             }}
         >
-            {/* Top highlight on hover */}
-            {hovered && (
-                <div aria-hidden style={{
-                    position: "absolute", top: 0, left: 0, right: 0, height: "1px",
-                    background: "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.1) 40%, rgba(255,255,255,0.1) 60%, transparent 100%)",
-                    pointerEvents: "none",
-                }} />
-            )}
+            {/* Hover left accent bar */}
+            <motion.div
+                animate={{ scaleY: hovered ? 1 : 0, opacity: hovered ? 1 : 0 }}
+                transition={{ duration: 0.25 }}
+                style={{
+                    position: "absolute", left: "-44px", top: "36px", bottom: "36px",
+                    width: "2px",
+                    background: item.accent,
+                    transformOrigin: "top",
+                    borderRadius: "2px",
+                }}
+            />
 
-            {/* Orb */}
-            <div aria-hidden style={{
-                position: "absolute", top: "-40px", right: "-40px",
-                width: "160px", height: "160px",
-                background: `radial-gradient(circle, ${cfg.accent.replace("0.9", "0.07")} 0%, transparent 70%)`,
-                pointerEvents: "none",
-                transition: "opacity 0.4s",
-                opacity: hovered ? 1 : 0.4,
-            }} />
-
-            {/* Top row: type badge + year */}
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "28px" }}>
+            {/* Year + type */}
+            <div style={{ display: "flex", flexDirection: "column", gap: "10px", paddingTop: "4px" }}>
                 <span style={{
-                    fontFamily: "'DM Mono', monospace",
-                    fontSize: "9px",
-                    letterSpacing: "0.28em",
-                    textTransform: "uppercase" as const,
-                    color: cfg.accent,
-                    padding: "5px 12px",
-                    border: `1px solid ${cfg.accent.replace("0.9", "0.25")}`,
-                    borderRadius: "4px",
-                    background: cfg.accent.replace("0.9", "0.07"),
-                }}>
-                    {cfg.label}
-                </span>
-                <span style={{
-                    fontFamily: "'DM Mono', monospace",
-                    fontSize: "10px",
-                    letterSpacing: "0.15em",
-                    color: "rgba(245,245,245,0.35)",
+                    fontFamily: "'DM Mono', monospace", fontSize: "10px",
+                    letterSpacing: "0.14em",
+                    color: hovered ? "rgba(245,245,245,0.55)" : "rgba(245,245,245,0.3)",
+                    transition: "color 0.3s",
+                    lineHeight: 1.5,
                 }}>
                     {item.year}
                 </span>
+                <span style={{
+                    fontFamily: "'DM Mono', monospace", fontSize: "8px",
+                    letterSpacing: "0.26em", textTransform: "uppercase" as const,
+                    color: hovered ? item.accent : "rgba(245,245,245,0.2)",
+                    transition: "color 0.3s",
+                }}>
+                    {item.type}
+                </span>
             </div>
 
-            {/* Title */}
-            <h3 style={{
-                fontFamily: "'Cormorant Garamond', Georgia, serif",
-                fontWeight: 400,
-                fontStyle: hovered ? "italic" : "normal",
-                fontSize: "clamp(20px, 2.2vw, 26px)",
-                lineHeight: 1.15,
-                letterSpacing: "-0.01em",
-                color: hovered ? "#F5F5F5" : "rgba(245,245,245,0.88)",
-                margin: "0 0 10px 0",
-                transition: "font-style 0.3s",
-            }}>
-                {item.title}
-            </h3>
+            {/* Main content */}
+            <div>
+                <h3 style={{
+                    fontFamily: "'Cormorant Garamond', Georgia, serif",
+                    fontWeight: 400,
+                    fontStyle: hovered ? "italic" : "normal",
+                    fontSize: "clamp(20px, 2.2vw, 26px)",
+                    lineHeight: 1.15,
+                    letterSpacing: "-0.01em",
+                    color: hovered ? "#F5F5F5" : "rgba(245,245,245,0.88)",
+                    margin: "0 0 8px 0",
+                    transition: "font-style 0.3s, color 0.3s",
+                }}>
+                    {item.title}
+                </h3>
+                <p style={{
+                    fontFamily: "'DM Mono', monospace", fontSize: "9px",
+                    letterSpacing: "0.2em", textTransform: "uppercase" as const,
+                    color: "rgba(245,245,245,0.32)",
+                    margin: "0 0 16px 0",
+                }}>
+                    {item.institution}
+                </p>
+                <p style={{
+                    fontFamily: "'DM Mono', monospace", fontWeight: 300,
+                    fontSize: "11px", lineHeight: 1.9,
+                    letterSpacing: "0.03em",
+                    color: "rgba(245,245,245,0.4)",
+                    margin: 0,
+                    maxWidth: "520px",
+                }}>
+                    {item.description}
+                </p>
+            </div>
 
-            {/* Institution */}
-            <p style={{
-                fontFamily: "'DM Mono', monospace",
-                fontSize: "10px",
-                letterSpacing: "0.18em",
-                textTransform: "uppercase" as const,
-                color: "rgba(245,245,245,0.38)",
-                margin: "0 0 20px 0",
-            }}>
-                {item.institution}
-            </p>
-
-            {/* Divider */}
-            <div style={{ height: "1px", background: "rgba(255,255,255,0.07)", marginBottom: "20px" }} />
-
-            {/* Description */}
-            <p style={{
-                fontFamily: "'DM Mono', monospace",
-                fontWeight: 300,
-                fontSize: "11.5px",
-                lineHeight: 1.9,
-                letterSpacing: "0.03em",
-                color: "rgba(245,245,245,0.48)",
-                margin: 0,
-            }}>
-                {item.description}
-            </p>
+            {/* Right arrow — appears on hover */}
+            <motion.div
+                animate={{ opacity: hovered ? 1 : 0, x: hovered ? 0 : 6 }}
+                transition={{ duration: 0.22 }}
+                style={{ paddingTop: "6px" }}
+            >
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                    <path d="M3 13L13 3M13 3H6M13 3V10" stroke={item.accent} strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+            </motion.div>
         </motion.div>
     )
 }
 
+/* ─────────────────────────────────────────────
+   AWARD ROW
+───────────────────────────────────────────── */
+function AwardRow({ item, index }: { item: typeof awards[0]; index: number }) {
+    const [hovered, setHovered] = useState(false)
+
+    return (
+        <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-30px" }}
+            transition={{ duration: 0.65, delay: index * 0.1, ease: [0.22, 1, 0.36, 1] }}
+            onMouseEnter={() => setHovered(true)}
+            onMouseLeave={() => setHovered(false)}
+            style={{
+                borderBottom: "1px solid rgba(255,255,255,0.09)",
+                padding: "28px 0",
+                display: "grid",
+                gridTemplateColumns: "160px 1fr",
+                gap: "40px",
+                alignItems: "center",
+                cursor: "default",
+                position: "relative",
+            }}
+        >
+            {/* Hover accent bar */}
+            <motion.div
+                animate={{ scaleY: hovered ? 1 : 0, opacity: hovered ? 1 : 0 }}
+                transition={{ duration: 0.25 }}
+                style={{
+                    position: "absolute", left: "-44px", top: "28px", bottom: "28px",
+                    width: "2px",
+                    background: item.accent,
+                    transformOrigin: "top",
+                    borderRadius: "2px",
+                }}
+            />
+
+            {/* Year */}
+            <span style={{
+                fontFamily: "'DM Mono', monospace", fontSize: "10px",
+                letterSpacing: "0.14em",
+                color: hovered ? "rgba(245,245,245,0.55)" : "rgba(245,245,245,0.28)",
+                transition: "color 0.3s",
+            }}>
+                {item.year}
+            </span>
+
+            {/* Content */}
+            <div style={{ display: "flex", flexDirection: "column" as const, gap: "6px" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
+                    {/* Trophy dot */}
+                    <div style={{
+                        width: "5px", height: "5px", borderRadius: "50%",
+                        background: hovered ? item.accent : "rgba(245,245,245,0.25)",
+                        flexShrink: 0,
+                        transition: "background 0.3s",
+                        boxShadow: hovered ? `0 0 8px ${item.accent}` : "none",
+                    }} />
+                    <h3 style={{
+                        fontFamily: "'Cormorant Garamond', Georgia, serif",
+                        fontWeight: 400,
+                        fontStyle: hovered ? "italic" : "normal",
+                        fontSize: "clamp(17px, 1.8vw, 22px)",
+                        lineHeight: 1.2,
+                        letterSpacing: "-0.01em",
+                        color: hovered ? "#F5F5F5" : "rgba(245,245,245,0.82)",
+                        margin: 0,
+                        transition: "font-style 0.3s, color 0.3s",
+                    }}>
+                        {item.title}
+                    </h3>
+                </div>
+                <p style={{
+                    fontFamily: "'DM Mono', monospace", fontWeight: 300,
+                    fontSize: "10.5px", lineHeight: 1.8,
+                    letterSpacing: "0.03em",
+                    color: "rgba(245,245,245,0.35)",
+                    margin: "0 0 0 19px",
+                }}>
+                    {item.body}
+                </p>
+            </div>
+        </motion.div>
+    )
+}
+
+/* ─────────────────────────────────────────────
+   PAGE
+───────────────────────────────────────────── */
 export default function Education() {
     const [isModalOpen, setIsModalOpen] = useState(false)
 
@@ -199,22 +276,14 @@ export default function Education() {
                 color: "white", overflow: "hidden",
             }}>
                 <GrainOverlay />
+                <div aria-hidden style={{ position: "absolute", inset: 0, zIndex: 2, pointerEvents: "none", background: "radial-gradient(ellipse 70% 70% at 50% 50%, transparent 40%, rgba(20,38,48,0.28) 100%)" }} />
+                <div aria-hidden style={{ position: "absolute", bottom: "-180px", right: "-160px", width: "520px", height: "520px", background: "rgba(111,162,190,0.1)", borderRadius: "50%", filter: "blur(80px)", pointerEvents: "none", zIndex: 1 }} />
+                <div aria-hidden style={{ position: "absolute", top: "-120px", left: "-120px", width: "420px", height: "420px", background: "rgba(111,162,190,0.08)", borderRadius: "50%", filter: "blur(80px)", pointerEvents: "none", zIndex: 1 }} />
 
-                {/* Vignette */}
-                <div aria-hidden style={{ position: "absolute", inset: 0, zIndex: 2, pointerEvents: "none", background: "radial-gradient(ellipse 70% 70% at 50% 50%, transparent 40%, rgba(40,58,70,0.22) 100%)" }} />
-
-                {/* Glows */}
-                <div aria-hidden style={{ position: "absolute", bottom: "-180px", right: "-160px", width: "520px", height: "520px", background: "rgba(255,255,255,0.07)", borderRadius: "50%", filter: "blur(80px)", pointerEvents: "none", zIndex: 1 }} />
-                <div aria-hidden style={{ position: "absolute", top: "-120px", left: "-120px", width: "420px", height: "420px", background: "rgba(255,255,255,0.06)", borderRadius: "50%", filter: "blur(80px)", pointerEvents: "none", zIndex: 1 }} />
-
-                {/* ── NAV ── */}
+                {/* NAV */}
                 <motion.nav
                     initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1, delay: 0.2 }}
-                    style={{
-                        position: "fixed", top: 0, left: 0, right: 0, zIndex: 50,
-                        display: "flex", justifyContent: "space-between", alignItems: "center",
-                        padding: "32px 44px", pointerEvents: "none",
-                    }}
+                    style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 50, display: "flex", justifyContent: "space-between", alignItems: "center", padding: "32px 44px", pointerEvents: "none" }}
                 >
                     <div style={{ display: "flex", alignItems: "center", gap: "10px", pointerEvents: "auto" }}>
                         <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
@@ -232,11 +301,11 @@ export default function Education() {
                     </button>
                 </motion.nav>
 
-                {/* ── SCROLLABLE CONTENT ── */}
+                {/* SCROLL */}
                 <div className="edu-scroll" style={{ position: "absolute", inset: 0, overflowY: "auto", zIndex: 10, padding: "130px 44px 100px" }}>
-                    <div style={{ maxWidth: "980px", margin: "0 auto" }}>
+                    <div style={{ maxWidth: "860px", margin: "0 auto", paddingLeft: "44px" }}>
 
-                        {/* Page header */}
+                        {/* Header */}
                         <motion.div
                             initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 1, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
@@ -248,42 +317,64 @@ export default function Education() {
                             <h1 style={{
                                 fontFamily: "'Cormorant Garamond', Georgia, serif",
                                 fontWeight: 300, fontStyle: "italic",
-                                fontSize: "clamp(52px, 8vw, 96px)",
+                                fontSize: "clamp(52px, 8vw, 88px)",
                                 lineHeight: 0.92, letterSpacing: "-0.02em",
-                                color: "#F5F5F5", margin: "0 0 20px 0",
-                                textShadow: "0 2px 40px rgba(40,58,70,0.18)",
+                                color: "#F5F5F5", margin: "0 0 24px 0",
+                                textShadow: "0 2px 40px rgba(20,38,48,0.18)",
                             }}>
                                 Education &<br />Qualifications
                             </h1>
-                            <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
-                                <div style={{ height: "1px", width: "48px", background: "rgba(245,245,245,0.3)" }} />
-                                {/* Legend */}
-                                <div style={{ display: "flex", gap: "20px" }}>
-                                    {Object.entries(typeConfig).map(([key, val]) => (
-                                        <div key={key} style={{ display: "flex", alignItems: "center", gap: "7px" }}>
-                                            <div style={{ width: "6px", height: "6px", borderRadius: "50%", background: val.accent }} />
-                                            <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "9px", letterSpacing: "0.2em", textTransform: "uppercase" as const, color: "rgba(245,245,245,0.35)" }}>{val.label}</span>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
+                            <div style={{ height: "1px", width: "48px", background: "rgba(245,245,245,0.3)" }} />
                         </motion.div>
 
-                        {/* Cards grid — 2 columns on wide, 1 on narrow */}
-                        <div style={{
-                            display: "grid",
-                            gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 440px), 1fr))",
-                            gap: "24px",
-                        }}>
-                            {educationData.map((item, i) => (
-                                <EducationCard key={item.id} item={item} index={i} />
-                            ))}
-                        </div>
+                        {/* ── EDUCATION SECTION ── */}
+                        <motion.div
+                            initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+                            transition={{ duration: 0.6, delay: 0.55 }}
+                            style={{ marginBottom: "72px" }}
+                        >
+                            {/* Section label */}
+                            <div style={{ display: "flex", alignItems: "center", gap: "20px", marginBottom: "8px" }}>
+                                <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "9px", letterSpacing: "0.28em", textTransform: "uppercase" as const, color: "rgba(245,245,245,0.3)" }}>
+                                    Academic
+                                </span>
+                                <div style={{ flex: 1, height: "1px", background: "rgba(255,255,255,0.1)" }} />
+                            </div>
 
-                        {/* Footer rule */}
+                            {/* Top border */}
+                            <div style={{ height: "1px", background: "rgba(255,255,255,0.09)", marginBottom: "0" }} />
+
+                            {/* Rows */}
+                            {education.map((item, i) => (
+                                <EduRow key={i} item={item} index={i} />
+                            ))}
+                        </motion.div>
+
+                        {/* ── AWARDS SECTION ── */}
+                        <motion.div
+                            initial={{ opacity: 0 }} whileInView={{ opacity: 1 }}
+                            viewport={{ once: true }} transition={{ duration: 0.6 }}
+                        >
+                            {/* Section label */}
+                            <div style={{ display: "flex", alignItems: "center", gap: "20px", marginBottom: "8px" }}>
+                                <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "9px", letterSpacing: "0.28em", textTransform: "uppercase" as const, color: "rgba(245,245,245,0.3)" }}>
+                                    Recognitions
+                                </span>
+                                <div style={{ flex: 1, height: "1px", background: "rgba(255,255,255,0.1)" }} />
+                            </div>
+
+                            {/* Top border */}
+                            <div style={{ height: "1px", background: "rgba(255,255,255,0.09)" }} />
+
+                            {awards.map((item, i) => (
+                                <AwardRow key={i} item={item} index={i} />
+                            ))}
+                        </motion.div>
+
+                        {/* Footer */}
                         <motion.div
                             initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}
-                            transition={{ duration: 0.8, delay: 0.2 }}
+                            transition={{ duration: 0.8 }}
                             style={{ marginTop: "80px", display: "flex", alignItems: "center", gap: "20px" }}
                         >
                             <div style={{ flex: 1, height: "1px", background: "rgba(245,245,245,0.1)" }} />
@@ -292,6 +383,7 @@ export default function Education() {
                             </span>
                             <div style={{ flex: 1, height: "1px", background: "rgba(245,245,245,0.1)" }} />
                         </motion.div>
+
                     </div>
                 </div>
             </section>
