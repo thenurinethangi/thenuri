@@ -48,13 +48,13 @@ const awards = [
     {
         year: "2024",
         title: "Genesys III Hackathon — First Runner-Up",
-        body: "Secured First Runner-Up position competing against top engineering teams.",
+        body: "Secured First Runner-Up at the IJSE-organized Genesys III Hackathon, competing among 30+ teams.",
         accent: "rgba(219,196,171,0.9)",
     },
     {
         year: "2025",
         title: "Circle Edge — Finalist",
-        body: "Selected as a finalist in the Circle Edge 2025 national competition.",
+        body: "Selected as a finalist in Circle Edge, IJSE's annual flagship competition, among 20+ participating teams.",
         accent: "rgba(219,196,171,0.9)",
     },
 ]
@@ -126,7 +126,7 @@ function EduRow({ item, index }: { item: typeof education[0]; index: number }) {
                 <h3 style={{
                     fontFamily: "'Cormorant Garamond', Georgia, serif",
                     fontWeight: 400,
-                    fontStyle: hovered ? "italic" : "normal",
+                    fontStyle: "normal",
                     fontSize: "clamp(20px, 2.2vw, 26px)",
                     lineHeight: 1.15,
                     letterSpacing: "-0.01em",
@@ -234,7 +234,7 @@ function AwardRow({ item, index }: { item: typeof awards[0]; index: number }) {
                     <h3 style={{
                         fontFamily: "'Cormorant Garamond', Georgia, serif",
                         fontWeight: 400,
-                        fontStyle: hovered ? "italic" : "normal",
+                        fontStyle: "normal",
                         fontSize: "clamp(17px, 1.8vw, 22px)",
                         lineHeight: 1.2,
                         letterSpacing: "-0.01em",

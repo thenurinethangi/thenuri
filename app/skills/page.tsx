@@ -4,14 +4,19 @@ import NavigationModal from "@/components/NavigationModal"
 import { motion, Variants, AnimatePresence } from "framer-motion"
 import { useState } from "react"
 import {
+    SiAmazonwebservices,
+    SiFigma,
+    SiGithubactions,
     SiReact,
     SiNextdotjs,
     SiTypescript,
     SiJavascript,
     SiTailwindcss,
+    SiKubernetes,
     SiNodedotjs,
     SiExpress,
     SiMongodb,
+    SiNginx,
     SiPostgresql,
     SiFirebase,
     SiDocker,
@@ -20,10 +25,11 @@ import {
     SiGithub,
     SiRedis,
     SiSpring,
+    SiSwagger,
     SiPython,
     SiThreedotjs,
 } from "react-icons/si"
-import { FaJava } from "react-icons/fa"
+import { FaJava, FaMicrosoft } from "react-icons/fa"
 
 /* GRAIN OVERLAY */
 function GrainOverlay() {
@@ -70,6 +76,7 @@ const skills = [
             { name: "Spring Boot", icon: <SiSpring /> },
             { name: "Node.js", icon: <SiNodedotjs /> },
             { name: "Express", icon: <SiExpress /> },
+            { name: "Hibernate", icon: <FaJava /> },
         ],
     },
     {
@@ -82,12 +89,24 @@ const skills = [
         ],
     },
     {
-        title: "Tools",
+        title: "Cloud",
         items: [
             { name: "Docker", icon: <SiDocker /> },
+            { name: "Kubernetes", icon: <SiKubernetes /> },
+            { name: "CI/CD", icon: <SiGithubactions /> },
+            { name: "AWS", icon: <SiAmazonwebservices /> },
+            { name: "Azure", icon: <FaMicrosoft /> },
+            // { name: "Nginx", icon: <SiNginx /> },
+        ],
+    },
+    {
+        title: "Tools",
+        items: [
             { name: "Git", icon: <SiGit /> },
             { name: "GitHub", icon: <SiGithub /> },
             { name: "Postman", icon: <SiPostman /> },
+            { name: "Swagger", icon: <SiSwagger /> },
+            { name: "Figma", icon: <SiFigma /> },
         ],
     },
 ]
