@@ -174,8 +174,6 @@ export default function Contact() {
                                 color: "rgba(245,245,245,0.55)",
                                 maxWidth: "340px",
                                 margin: "0 0 12px 0",
-                                borderLeft: "2px solid rgba(245,245,245,0.2)",
-                                paddingLeft: "20px",
                             }}>
                                 Building something? Let's talk. I take on select projects where precision and scale actually matter.
                             </p>
@@ -268,23 +266,12 @@ export default function Contact() {
                                 borderRadius: "16px",
                                 padding: "36px 36px",
                                 display: "flex", flexDirection: "column" as const, gap: "24px",
-                                position: "relative", overflow: "hidden",
                                 border: "1px solid rgba(255,255,255,0.2)",
-                                boxShadow: "0 8px 40px rgba(20,38,48,0.15), inset 0 1px 0 rgba(255,255,255,0.25)",
                             }}>
-                                {/* Top glint */}
-                                <div aria-hidden style={{ position: "absolute", top: 0, left: 0, right: 0, height: "1px", background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent)", pointerEvents: "none" }} />
-                                {/* Inner orb */}
-                                <div aria-hidden style={{ position: "absolute", top: "-60px", right: "-60px", width: "200px", height: "200px", background: "radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%)", pointerEvents: "none" }} />
-
                                 {/* Form label */}
-                                <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-                                    <div style={{ flex: 1, height: "1px", background: "rgba(255,255,255,0.22)" }} />
-                                    <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "9px", letterSpacing: "0.28em", textTransform: "uppercase" as const, color: "rgba(245,245,245,0.5)" }}>
-                                        Send a Message
-                                    </span>
-                                    <div style={{ flex: 1, height: "1px", background: "rgba(255,255,255,0.22)" }} />
-                                </div>
+                                <p style={{ fontFamily: "'DM Mono', monospace", fontSize: "9px", letterSpacing: "0.28em", textTransform: "uppercase" as const, color: "rgba(245,245,245,0.4)", margin: 0 }}>
+                                    Send a Message
+                                </p>
 
                                 {/* Fields */}
                                 <div className="form-row" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px" }}>
@@ -329,12 +316,10 @@ export default function Contact() {
                     </motion.div>
 
                     {/* Footer */}
-                    <div className="contact-footer" style={{ maxWidth: "1100px", margin: "0 auto", padding: "0 44px 80px", display: "flex", alignItems: "center", gap: "20px" }}>
-                        <div style={{ flex: 1, height: "1px", background: "rgba(245,245,245,0.08)" }} />
+                    <div className="contact-footer" style={{ maxWidth: "1100px", margin: "0 auto", padding: "0 44px 80px" }}>
                         <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "9px", letterSpacing: "0.25em", textTransform: "uppercase" as const, color: "rgba(245,245,245,0.2)" }}>
                             Always Open to the Right Conversation
                         </span>
-                        <div style={{ flex: 1, height: "1px", background: "rgba(245,245,245,0.08)" }} />
                     </div>
                 </div>
             </section>
