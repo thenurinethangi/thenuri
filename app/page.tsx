@@ -430,7 +430,7 @@ export default function Home() {
         </div>
 
         {/* Scroll CTA */}
-        <ScrollCTA />
+        {/* <ScrollCTA /> */}
 
         {/* Navigation Modal */}
         <AnimatePresence>

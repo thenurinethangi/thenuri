@@ -2,7 +2,7 @@
 
 import NavigationModal from "@/components/NavigationModal"
 import { motion, AnimatePresence } from "framer-motion"
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
 
 function GrainOverlay() {
     return (
@@ -14,25 +14,80 @@ function GrainOverlay() {
     )
 }
 
+function AnimatedCounter({ value, suffix = "" }: { value: number; suffix?: string }) {
+    const [display, setDisplay] = useState(0)
+    const ref = useRef<HTMLSpanElement>(null)
+    const [inView, setInView] = useState(false)
+
+    useEffect(() => {
+        const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) setInView(true) }, { threshold: 0.5 })
+        if (ref.current) obs.observe(ref.current)
+        return () => obs.disconnect()
+    }, [])
+
+    useEffect(() => {
+        if (!inView) return
+        let start = 0
+        const steps = 40
+        const inc = value / steps
+        const timer = setInterval(() => {
+            start += inc
+            if (start >= value) { setDisplay(value); clearInterval(timer) }
+            else setDisplay(Math.floor(start))
+        }, 28)
+        return () => clearInterval(timer)
+    }, [inView, value])
+
+    return <span ref={ref}>{display}{suffix}</span>
+}
+
 const pillars = [
     {
         index: "01",
         title: "Full-Stack Engineering",
-        body: "React, Next.js, Node.js, Spring Boot, and the MERN stack — building end-to-end systems that are secure, cloud-ready, and built for real-world scale.",
+        body: "React, Next.js, Node.js, Spring Boot, and the MERN stack — building end-to-end platforms that are secure, cloud-ready, and built for real-world scale.",
         accent: "rgba(171,205,219,0.9)",
     },
     {
         index: "02",
         title: "Mobile & Cross-Platform",
-        body: "React Native and Expo for production-grade mobile platforms with offline-first architectures, real-time sync, and smooth native performance.",
+        body: "Building mobile applications for both native-specific environments and cross-platform ecosystems, with reliable performance, maintainable architecture, and production readiness.",
         accent: "rgba(186,213,186,0.9)",
     },
     {
         index: "03",
-        title: "AI & Intelligent Systems",
-        body: "Integrating LLMs and AI-driven workflows into production platforms — from interview simulators to adaptive scoring pipelines and smart analytics layers.",
+        title: "AI-Integrated Platforms",
+        body: "Building AI-integrated platforms to improve decision-making, automate workflows, and deliver smarter user experiences across digital products.",
         accent: "rgba(209,190,219,0.9)",
     },
+]
+
+const services = [
+    {
+        index: "01",
+        title: "Web & Mobile Solution Delivery",
+        body: "Delivering modern web and mobile platforms aligned with real business objectives and personal operational requirements.",
+        accent: "rgba(171,205,219,0.9)",
+    },
+    {
+        index: "02",
+        title: "Existing Software Upgrades",
+        body: "Enhancing and modernizing existing software products, including platforms built by me or inherited from other teams.",
+        accent: "rgba(186,213,186,0.9)",
+    },
+    {
+        index: "03",
+        title: "Software Consulting",
+        body: "Providing software consulting to define problem scope, recommend the right technical strategy, and guide practical execution.",
+        accent: "rgba(209,190,219,0.9)",
+    },
+]
+
+const stats = [
+    { value: 2, suffix: "+", label: "Years Coding" },
+    { value: 8, suffix: "+", label: "Projects Shipped" },
+    { value: 20, suffix: "+", label: "Tech Stacks" },
+    { value: 100, suffix: "%", label: "Commitment" },
 ]
 
 export default function About() {
@@ -48,6 +103,7 @@ export default function About() {
                 @media (max-width: 720px) {
                     .about-hero { grid-template-columns: 1fr !important; gap: 48px !important; }
                     .about-pillars { grid-template-columns: 1fr !important; }
+                    .about-services { grid-template-columns: 1fr !important; }
                 }
             `}</style>
 
@@ -129,7 +185,7 @@ export default function About() {
                                 }}>
                                     <div style={{ width: "5px", height: "5px", borderRadius: "50%", background: "rgba(171,205,219,0.9)", flexShrink: 0 }} />
                                     <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "9px", letterSpacing: "0.22em", textTransform: "uppercase" as const, color: "rgba(245,245,245,0.55)" }}>
-                                        Software Engineering Undergraduate
+                                        Software Engineering Undergraduate | Professional Developer
                                     </span>
                                 </div>
 
@@ -192,12 +248,68 @@ export default function About() {
                                     color: "rgba(245,245,245,0.48)",
                                     margin: 0,
                                 }}>
-                                    Experienced across modern full-stack ecosystems including React, Next.js, React Native, Spring Boot, Node.js, and MERN — delivering secure, cloud-ready systems built for reliability, extensibility, and real-world scale.
+                                    Experienced across modern full-stack ecosystems including React, Next.js, React Native, Spring Boot, Node.js, and MERN — delivering secure, cloud-ready platforms built for reliability, extensibility, and real-world scale.
                                 </p>
                             </motion.div>
                         </div>
 
+                        {/* ── STATS STRIP ── */}
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.1 }}
+                            style={{ marginBottom: "80px" }}
+                        >
+                            <div className="about-stats" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "12px" }}>
+                                {stats.map((s, i) => (
+                                    <motion.div
+                                        key={s.label}
+                                        className="stat-card"
+                                        initial={{ opacity: 0, y: 14 }} whileInView={{ opacity: 1, y: 0 }}
+                                        viewport={{ once: true }} transition={{ duration: 0.6, delay: i * 0.08 }}
+                                    >
+                                        <div style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontWeight: 300, fontStyle: "italic", fontSize: "clamp(36px, 4vw, 48px)", lineHeight: 1, color: "rgba(171,205,219,0.85)", marginBottom: "8px" }}>
+                                            <AnimatedCounter value={s.value} suffix={s.suffix} />
+                                        </div>
+                                        <div style={{ fontFamily: "'DM Mono', monospace", fontSize: "8.5px", letterSpacing: "0.22em", textTransform: "uppercase", color: "rgba(245,245,245,0.35)" }}>
+                                            {s.label}
+                                        </div>
+                                    </motion.div>
+                                ))}
+                            </div>
+                        </motion.div>
+
                         {/* ── WHAT I BUILD ── */}
+                        <motion.div
+                            initial={{ opacity: 0 }} whileInView={{ opacity: 1 }}
+                            viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.1 }}
+                            style={{ marginTop: "84px", marginBottom: "42px" }}
+                        >
+                            <div style={{ display: "flex", alignItems: "center", gap: "20px", marginBottom: "30px" }}>
+                                <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "9px", letterSpacing: "0.28em", textTransform: "uppercase" as const, color: "rgba(245,245,245,0.3)" }}>
+                                    Services
+                                </span>
+                                <div style={{ flex: 1, height: "1px", background: "rgba(255,255,255,0.1)" }} />
+                            </div>
+
+                            {/* <p style={{
+                                fontFamily: "'DM Mono', monospace",
+                                fontSize: "10px",
+                                letterSpacing: "0.08em",
+                                lineHeight: 1.9,
+                                color: "rgba(245,245,245,0.5)",
+                                margin: "0 0 20px 0",
+                                textTransform: "uppercase" as const,
+                            }}>
+                                Delivered across web, mobile, and AI-integrated workflows.
+                            </p> */}
+
+                            <div className="about-services" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1px", background: "rgba(255,255,255,0.08)", borderRadius: "14px", overflow: "hidden" }}>
+                                {services.map((service, i) => (
+                                    <ServicePanel key={service.index} item={service} delay={i * 0.1} />
+                                ))}
+                            </div>
+                        </motion.div>
+
                         <motion.div
                             initial={{ opacity: 0 }} whileInView={{ opacity: 1 }}
                             viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.1 }}
@@ -294,7 +406,8 @@ function PillarPanel({ item, delay }: { item: typeof pillars[0]; delay: number }
             {/* Title */}
             <h3 style={{
                 fontFamily: "'Cormorant Garamond', Georgia, serif",
-                fontWeight: 400, fontStyle: hovered ? "italic" : "normal",
+                fontWeight: 400,
+                fontStyle: "normal",
                 fontSize: "clamp(17px, 1.8vw, 20px)",
                 lineHeight: 1.2, letterSpacing: "-0.01em",
                 color: hovered ? "#F5F5F5" : "rgba(245,245,245,0.82)",
@@ -315,6 +428,86 @@ function PillarPanel({ item, delay }: { item: typeof pillars[0]; delay: number }
             <p style={{
                 fontFamily: "'DM Mono', monospace", fontWeight: 300,
                 fontSize: "10.5px", lineHeight: 1.9,
+                letterSpacing: "0.03em",
+                color: "rgba(245,245,245,0.42)",
+                margin: 0,
+            }}>
+                {item.body}
+            </p>
+        </motion.div>
+    )
+}
+
+function ServicePanel({ item, delay }: { item: typeof services[0]; delay: number }) {
+    const [hovered, setHovered] = useState(false)
+
+    return (
+        <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-30px" }}
+            transition={{ duration: 0.7, delay, ease: [0.22, 1, 0.36, 1] }}
+            onMouseEnter={() => setHovered(true)}
+            onMouseLeave={() => setHovered(false)}
+            style={{
+                padding: "40px 36px",
+                background: hovered ? "#1C2B33" : "rgba(255,255,255,0.04)",
+                position: "relative",
+                overflow: "hidden",
+                transition: "background 0.4s",
+                cursor: "default",
+            }}
+        >
+            {hovered && (
+                <div aria-hidden style={{ position: "absolute", top: 0, left: 0, right: 0, height: "1px", background: `linear-gradient(90deg, transparent, ${item.accent.replace("0.9", "0.3")}, transparent)`, pointerEvents: "none" }} />
+            )}
+
+            <div aria-hidden style={{
+                position: "absolute", top: "-20px", right: "-20px",
+                width: "100px", height: "100px",
+                background: `radial-gradient(circle, ${item.accent.replace("0.9", "0.12")} 0%, transparent 70%)`,
+                opacity: hovered ? 1 : 0.3,
+                transition: "opacity 0.4s",
+                pointerEvents: "none",
+            }} />
+
+            <span style={{
+                display: "block",
+                fontFamily: "'DM Mono', monospace",
+                fontSize: "9px",
+                letterSpacing: "0.26em",
+                textTransform: "uppercase" as const,
+                color: hovered ? item.accent : "rgba(245,245,245,0.22)",
+                marginBottom: "20px",
+                transition: "color 0.3s",
+            }}>
+                {item.index}
+            </span>
+
+            <h3 style={{
+                fontFamily: "'Cormorant Garamond', Georgia, serif",
+                fontWeight: 400,
+                fontSize: "clamp(17px, 1.8vw, 20px)",
+                lineHeight: 1.2,
+                letterSpacing: "-0.01em",
+                color: hovered ? "#F5F5F5" : "rgba(245,245,245,0.82)",
+                margin: "0 0 16px 0",
+                transition: "color 0.3s",
+            }}>
+                {item.title}
+            </h3>
+
+            <motion.div
+                animate={{ width: hovered ? "36px" : "20px", background: hovered ? item.accent : "rgba(245,245,245,0.18)" }}
+                transition={{ duration: 0.35 }}
+                style={{ height: "1px", marginBottom: "16px" }}
+            />
+
+            <p style={{
+                fontFamily: "'DM Mono', monospace",
+                fontWeight: 300,
+                fontSize: "10.5px",
+                lineHeight: 1.9,
                 letterSpacing: "0.03em",
                 color: "rgba(245,245,245,0.42)",
                 margin: 0,
