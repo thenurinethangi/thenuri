@@ -191,7 +191,7 @@ export default function About() {
 
                                 {/* CV button */}
                                 <motion.a
-                                    href="/Thenuri_Nanayakkara_Final_CV.pdf"
+                                    href="/Thenuri_Nethangi_CV.pdf"
                                     download
                                     onHoverStart={() => setCvHovered(true)}
                                     onHoverEnd={() => setCvHovered(false)}
