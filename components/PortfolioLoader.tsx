@@ -5,30 +5,22 @@ import { AnimatePresence } from "framer-motion"
 import LoadingScreen from "./LoadingScreen"
 
 export default function PortfolioLoader({ children }: { children: React.ReactNode }) {
-    const [status, setStatus] = useState<"checking" | "loading" | "ready">("checking")
+    const [status, setStatus] = useState<"checking" | "loading" | "ready">(() => {
+        if (typeof document === "undefined") return "checking"
+        return document.documentElement.dataset.portfolioLoader === "ready" ? "ready" : "loading"
+    })
 
     useEffect(() => {
         const hasLoaded = sessionStorage.getItem("portfolio_loaded")
-        setStatus(hasLoaded ? "ready" : "loading")
+        const nextStatus = hasLoaded ? "ready" : "loading"
+        document.documentElement.dataset.portfolioLoader = nextStatus
+        setStatus(nextStatus)
     }, [])
 
     const handleComplete = () => {
         sessionStorage.setItem("portfolio_loaded", "1")
+        document.documentElement.dataset.portfolioLoader = "ready"
         setStatus("ready")
-    }
-
-    if (status === "checking") {
-        return (
-            <div
-                aria-hidden
-                style={{
-                    position: "fixed",
-                    inset: 0,
-                    zIndex: 9998,
-                    background: "linear-gradient(160deg, #4A6374 0%, #5C7A8C 18%, #6F8E9F 35%, #87A5B5 52%, #A5BDC9 66%, #C2D2DA 79%, #DDE6EB 90%, #EFF3F5 100%)",
-                }}
-            />
-        )
     }
 
     return (
@@ -38,7 +30,15 @@ export default function PortfolioLoader({ children }: { children: React.ReactNod
                     <LoadingScreen key="loader" onComplete={handleComplete} />
                 )}
             </AnimatePresence>
-            {status === "ready" ? children : null}
+            <div
+                id="portfolio-app-shell"
+                style={{
+                    opacity: status === "ready" ? 1 : 0,
+                    transition: "opacity 0.45s ease",
+                }}
+            >
+                {children}
+            </div>
         </>
     )
 }

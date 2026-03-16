@@ -288,7 +288,7 @@ export default function Contact() {
                                     />
                                     <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "8.5px", letterSpacing: "0.22em", textTransform: "uppercase" as const, color: "rgba(186,213,186,0.65)" }}>
                                         Available for new projects
-                                    </span>
+                                    </span>sill
                                 </div> */}
                             </div>
 
