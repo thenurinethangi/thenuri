@@ -5,10 +5,7 @@ import { AnimatePresence } from "framer-motion"
 import LoadingScreen from "./LoadingScreen"
 
 export default function PortfolioLoader({ children }: { children: React.ReactNode }) {
-    const [status, setStatus] = useState<"checking" | "loading" | "ready">(() => {
-        if (typeof document === "undefined") return "checking"
-        return document.documentElement.dataset.portfolioLoader === "ready" ? "ready" : "loading"
-    })
+    const [status, setStatus] = useState<"checking" | "loading" | "ready">("checking")
 
     useEffect(() => {
         const hasLoaded = sessionStorage.getItem("portfolio_loaded")
