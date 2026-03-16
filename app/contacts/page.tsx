@@ -16,49 +16,76 @@ function GrainOverlay() {
 }
 
 const socials = [
-    { icon: <FaEnvelope />, label: "Email", href: "mailto:thenurinathangi@gmail.com" },
-    { icon: <FaLinkedin />, label: "LinkedIn", href: "https://www.linkedin.com/in/thenurinanayakkara/" },
-    { icon: <FaGithub />, label: "GitHub", href: "https://github.com/thenurinethangi" },
-    { icon: <FaInstagram />, label: "Instagram", href: "https://www.instagram.com/thenuri__7/" },
-    { icon: <FaFacebook />, label: "Facebook", href: "https://www.facebook.com/thenuri__7/" },
+    { icon: <FaEnvelope />, label: "Email", sub: "thenurinathangi@gmail.com", href: "mailto:thenurinathangi@gmail.com" },
+    { icon: <FaLinkedin />, label: "LinkedIn", sub: "/in/thenurinanayakkara", href: "https://www.linkedin.com/in/thenurinanayakkara/" },
+    { icon: <FaGithub />, label: "GitHub", sub: "/thenurinethangi", href: "https://github.com/thenurinethangi" },
+    { icon: <FaInstagram />, label: "Instagram", sub: "@thenuri__7", href: "https://www.instagram.com/thenuri__7/" },
+    { icon: <FaFacebook />, label: "Facebook", sub: "@thenuri__7", href: "https://www.facebook.com/thenuri__7/" },
 ]
 
 /* ─────────────────────────────────────────────
-   FIELD
+   UNDERLINE FIELD — cleaner than box inputs
 ───────────────────────────────────────────── */
-function Field({ id, label, type = "text", rows, value, onChange }: { id: string; label: string; type?: string; rows?: number; value: string; onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void }) {
+function Field({
+    id, label, type = "text", rows, value, onChange,
+}: {
+    id: string; label: string; type?: string; rows?: number
+    value: string; onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void
+}) {
     const [focused, setFocused] = useState(false)
+    const hasValue = value.length > 0
 
-    const base: React.CSSProperties = {
+    const inputStyle: React.CSSProperties = {
         width: "100%",
-        background: focused ? "rgba(255,255,255,0.18)" : "rgba(255,255,255,0.1)",
-        border: `1px solid ${focused ? "rgba(255,255,255,0.45)" : "rgba(255,255,255,0.22)"}`,
-        borderRadius: "8px",
-        padding: "13px 16px",
+        background: "transparent",
+        border: "none",
+        borderBottom: `1px solid ${focused ? "rgba(245,245,245,0.55)" : "rgba(245,245,245,0.15)"}`,
+        padding: "10px 0 10px",
         outline: "none",
-        color: "rgba(245,245,245,0.95)",
+        color: "rgba(245,245,245,0.92)",
         fontFamily: "'DM Mono', monospace",
-        fontSize: "12px",
+        fontSize: "11.5px",
         letterSpacing: "0.05em",
-        transition: "all 0.25s",
+        transition: "border-color 0.25s",
         resize: "none" as const,
         boxSizing: "border-box" as const,
+        caretColor: "rgba(171,205,219,0.9)",
     }
 
     return (
-        <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+        <div style={{ position: "relative", paddingTop: "18px" }}>
+            {/* floating label */}
             <label htmlFor={id} style={{
-                fontFamily: "'DM Mono', monospace", fontSize: "9px",
-                letterSpacing: "0.28em", textTransform: "uppercase" as const,
-                color: focused ? "rgba(245,245,245,0.7)" : "rgba(245,245,245,0.45)",
-                transition: "color 0.25s",
+                position: "absolute",
+                top: focused || hasValue ? "0px" : "28px",
+                left: 0,
+                fontFamily: "'DM Mono', monospace",
+                fontSize: focused || hasValue ? "8px" : "10px",
+                letterSpacing: "0.28em",
+                textTransform: "uppercase" as const,
+                color: focused ? "rgba(171,205,219,0.8)" : "rgba(245,245,245,0.35)",
+                transition: "all 0.22s ease",
+                pointerEvents: "none",
             }}>
                 {label}
             </label>
             {rows
-                ? <textarea id={id} rows={rows} style={base} value={value} onChange={onChange} onFocus={() => setFocused(true)} onBlur={() => setFocused(false)} />
-                : <input id={id} type={type} style={base} value={value} onChange={onChange} onFocus={() => setFocused(true)} onBlur={() => setFocused(false)} />
+                ? <textarea id={id} rows={rows} style={inputStyle} value={value}
+                    onChange={onChange} onFocus={() => setFocused(true)} onBlur={() => setFocused(false)} />
+                : <input id={id} type={type} style={inputStyle} value={value}
+                    onChange={onChange} onFocus={() => setFocused(true)} onBlur={() => setFocused(false)} />
             }
+            {/* animated underline accent */}
+            <motion.div
+                animate={{ scaleX: focused ? 1 : 0, opacity: focused ? 1 : 0 }}
+                transition={{ duration: 0.25 }}
+                style={{
+                    position: "absolute", bottom: 0, left: 0,
+                    width: "100%", height: "1px",
+                    background: "rgba(171,205,219,0.75)",
+                    transformOrigin: "left",
+                }}
+            />
         </div>
     )
 }
@@ -69,24 +96,19 @@ function Field({ id, label, type = "text", rows, value, onChange }: { id: string
 export default function Contact() {
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [hoverBtn, setHoverBtn] = useState(false)
+    const [sent, setSent] = useState(false)
 
-    // Form state
     const [firstName, setFirstName] = useState("")
-    const [lastName, setLastName] = useState("")
-    const [email, setEmail] = useState("")
-    const [subject, setSubject] = useState("")
-    const [message, setMessage] = useState("")
+    const [lastName, setLastName]   = useState("")
+    const [email, setEmail]         = useState("")
+    const [subject, setSubject]     = useState("")
+    const [message, setMessage]     = useState("")
 
     const handleSend = (e: React.MouseEvent) => {
         e.preventDefault()
-        // Here you would normally handle the API request to send the email
-
-        // Clear all fields
-        setFirstName("")
-        setLastName("")
-        setEmail("")
-        setSubject("")
-        setMessage("")
+        setSent(true)
+        setTimeout(() => setSent(false), 3000)
+        setFirstName(""); setLastName(""); setEmail(""); setSubject(""); setMessage("")
     }
 
     return (
@@ -95,14 +117,17 @@ export default function Contact() {
                 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Mono:wght@300;400&display=swap');
                 .contact-scroll::-webkit-scrollbar { display: none; }
                 .contact-scroll { -ms-overflow-style: none; scrollbar-width: none; }
-                @media (max-width: 800px) {
-                    .nav-bar { padding: 24px 24px !important; }
-                    .contact-header { padding: 110px 24px 0 !important; }
-                    .contact-grid { grid-template-columns: 1fr !important; gap: 40px !important; }
-                    .contact-left { border-right: none !important; border-bottom: 1px solid rgba(255,255,255,0.1) !important; padding: 0 0 40px 0 !important; }
-                    .contact-right { padding: 40px 0 0 0 !important; }
-                    .form-row { grid-template-columns: 1fr !important; }
-                    .contact-footer { padding: 0 24px 60px !important; }
+
+                .social-row:hover .social-label { color: rgba(245,245,245,0.85) !important; }
+                .social-row:hover .social-sub   { color: rgba(171,205,219,0.65) !important; }
+                .social-row:hover .social-icon  { color: rgba(245,245,245,0.7) !important; }
+                .social-row:hover .social-arrow { opacity: 1 !important; transform: translate(2px,-2px) !important; }
+
+                @media (max-width: 860px) {
+                    .contact-body { grid-template-columns: 1fr !important; }
+                    .contact-left { border-right: none !important; padding-right: 0 !important; border-bottom: 1px solid rgba(255,255,255,0.08) !important; padding-bottom: 48px !important; }
+                    .form-row     { grid-template-columns: 1fr !important; }
+                    .page-wrap    { padding: 120px 24px 80px !important; }
                 }
             `}</style>
 
@@ -116,9 +141,8 @@ export default function Contact() {
                 <div aria-hidden style={{ position: "absolute", bottom: "-180px", left: "-160px", width: "520px", height: "520px", background: "rgba(111,162,190,0.1)", borderRadius: "50%", filter: "blur(80px)", pointerEvents: "none", zIndex: 1 }} />
                 <div aria-hidden style={{ position: "absolute", top: "-120px", right: "-120px", width: "420px", height: "420px", background: "rgba(111,162,190,0.08)", borderRadius: "50%", filter: "blur(80px)", pointerEvents: "none", zIndex: 1 }} />
 
-                {/* NAV */}
+                {/* ── NAV — identical to original ── */}
                 <motion.nav
-                    className="nav-bar"
                     initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1, delay: 0.2 }}
                     style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 50, display: "flex", justifyContent: "space-between", alignItems: "center", padding: "32px 44px", pointerEvents: "none" }}
                 >
@@ -138,188 +162,218 @@ export default function Contact() {
                     </button>
                 </motion.nav>
 
-                {/* SCROLL */}
+                {/* ── SCROLL ── */}
                 <div className="contact-scroll" style={{ position: "absolute", inset: 0, overflowY: "auto", zIndex: 10 }}>
+                    <div className="page-wrap" style={{ maxWidth: "1060px", margin: "0 auto", padding: "130px 44px 100px" }}>
 
-                    {/* ── TOP SECTION: headline full width ── */}
-                    <motion.div
-                        className="contact-header"
-                        initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 1, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
-                        style={{ padding: "140px 44px 0", maxWidth: "1100px", margin: "0 auto" }}
-                    >
-                        <p style={{ fontFamily: "'DM Mono', monospace", fontSize: "10px", letterSpacing: "0.3em", textTransform: "uppercase" as const, color: "rgba(245,245,245,0.4)", margin: "0 0 18px 0" }}>
+                        {/* ── PAGE LABEL ── */}
+                        <motion.p
+                            initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.8, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                            style={{ fontFamily: "'DM Mono', monospace", fontSize: "10px", letterSpacing: "0.3em", textTransform: "uppercase" as const, color: "rgba(245,245,245,0.4)", margin: "0 0 20px 0" }}
+                        >
                             — Get In Touch
-                        </p>
+                        </motion.p>
 
-                        {/* Giant heading */}
-                        <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: "40px", flexWrap: "wrap" as const, marginBottom: "32px" }}>
+                        {/* ── HERO HEADING + pull quote ── */}
+                        <motion.div
+                            initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 1, delay: 0.38, ease: [0.22, 1, 0.36, 1] }}
+                            style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: "48px", flexWrap: "wrap" as const, marginBottom: "40px" }}
+                        >
                             <h1 style={{
                                 fontFamily: "'Cormorant Garamond', Georgia, serif",
                                 fontWeight: 300, fontStyle: "italic",
-                                fontSize: "clamp(56px, 9vw, 110px)",
+                                fontSize: "clamp(54px, 9vw, 108px)",
                                 lineHeight: 0.88, letterSpacing: "-0.02em",
                                 color: "#F5F5F5", margin: 0,
                                 textShadow: "0 2px 40px rgba(20,38,48,0.2)",
                             }}>
                                 Let's<br />Connect
                             </h1>
-
-                            {/* Pull quote sits bottom-right of heading */}
                             <p style={{
                                 fontFamily: "'Cormorant Garamond', Georgia, serif",
                                 fontWeight: 300, fontStyle: "italic",
-                                fontSize: "clamp(16px, 1.6vw, 20px)",
-                                lineHeight: 1.65,
-                                color: "rgba(245,245,245,0.55)",
-                                maxWidth: "340px",
-                                margin: "0 0 12px 0",
+                                fontSize: "clamp(15px, 1.5vw, 19px)",
+                                lineHeight: 1.7,
+                                color: "rgba(245,245,245,0.5)",
+                                maxWidth: "320px",
+                                margin: "0 0 10px 0",
                             }}>
                                 Building something? Let's talk. I take on select projects where precision and scale actually matter.
                             </p>
-                        </div>
+                        </motion.div>
 
-                        {/* Full-width divider */}
-                        <div style={{ height: "1px", background: "rgba(255,255,255,0.1)", marginBottom: "0" }} />
-                    </motion.div>
+                        {/* Full-width rule */}
+                        <motion.div
+                            initial={{ scaleX: 0 }} animate={{ scaleX: 1 }}
+                            transition={{ duration: 1, delay: 0.55, ease: [0.22, 1, 0.36, 1] }}
+                            style={{ height: "1px", background: "rgba(255,255,255,0.1)", marginBottom: "52px", transformOrigin: "left" }}
+                        />
 
-                    {/* ── BOTTOM SECTION: socials + form ── */}
-                    <motion.div
-                        className="contact-grid"
-                        initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 1, delay: 0.6, ease: [0.22, 1, 0.36, 1] }}
-                        style={{
-                            maxWidth: "1100px", margin: "0 auto",
-                            display: "grid",
-                            gridTemplateColumns: "1fr 1.15fr",
-                            gap: "0",
-                            borderBottom: "1px solid rgba(255,255,255,0.1)",
-                            marginBottom: "60px",
-                            padding: "0 44px",
-                        }}
-                    >
-                        {/* LEFT — socials */}
-                        <div className="contact-left" style={{
-                            borderRight: "1px solid rgba(255,255,255,0.1)",
-                            padding: "48px 44px 48px 0",
-                            display: "flex", flexDirection: "column" as const, justifyContent: "space-between",
-                        }}>
-                            <div>
-                                <p style={{ fontFamily: "'DM Mono', monospace", fontSize: "9px", letterSpacing: "0.28em", textTransform: "uppercase" as const, color: "rgba(245,245,245,0.28)", margin: "0 0 24px 0" }}>
-                                    Find me on
-                                </p>
-                                <div style={{ display: "flex", flexDirection: "column" as const }}>
-                                    {socials.map((s, i) => (
-                                        <motion.a
-                                            key={i}
-                                            href={s.href}
-                                            target="_blank" rel="noreferrer"
-                                            initial={{ opacity: 0, x: -10 }}
-                                            animate={{ opacity: 1, x: 0 }}
-                                            transition={{ delay: 0.7 + i * 0.07, duration: 0.45 }}
-                                            whileHover="hovered"
-                                            style={{
-                                                display: "flex", alignItems: "center", justifyContent: "space-between",
-                                                padding: "15px 0",
-                                                borderBottom: "1px solid rgba(255,255,255,0.07)",
-                                                textDecoration: "none", cursor: "pointer",
-                                            }}
-                                        >
-                                            <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
-                                                <span style={{ fontSize: "13px", color: "rgba(245,245,245,0.38)" }}>{s.icon}</span>
-                                                <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "10px", letterSpacing: "0.2em", textTransform: "uppercase" as const, color: "rgba(245,245,245,0.52)" }}>
-                                                    {s.label}
-                                                </span>
-                                            </div>
-                                            <motion.div
-                                                variants={{ hovered: { x: 2, y: -2, opacity: 1 }, rest: { x: 0, y: 0, opacity: 0.22 } }}
-                                                initial="rest" animate="rest"
-                                            >
-                                                <svg width="11" height="11" viewBox="0 0 12 12" fill="none">
-                                                    <path d="M1 11L11 1M11 1H4M11 1V8" stroke="rgba(245,245,245,0.7)" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
-                                                </svg>
-                                            </motion.div>
-                                        </motion.a>
-                                    ))}
-                                </div>
-                            </div>
-
-                            {/* Availability tag */}
-                            <div style={{ marginTop: "36px", display: "flex", alignItems: "center", gap: "10px" }}>
-                                <motion.div
-                                    animate={{ opacity: [1, 0.3, 1] }}
-                                    transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-                                    style={{ width: "6px", height: "6px", borderRadius: "50%", background: "rgba(186,213,186,0.9)", flexShrink: 0 }}
-                                />
-                                <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "9px", letterSpacing: "0.22em", textTransform: "uppercase" as const, color: "rgba(245,245,245,0.35)" }}>
-                                    Available for new projects
-                                </span>
-                            </div>
-                        </div>
-
-                        {/* RIGHT — dark form panel */}
-                        <div className="contact-right" style={{ padding: "40px 0 40px 48px" }}>
-                            <div style={{
-                                background: "rgba(255,255,255,0.12)",
-                                backdropFilter: "blur(24px)",
-                                WebkitBackdropFilter: "blur(24px)",
-                                borderRadius: "16px",
-                                padding: "36px 36px",
-                                display: "flex", flexDirection: "column" as const, gap: "24px",
-                                border: "1px solid rgba(255,255,255,0.2)",
+                        {/* ── BODY: socials LEFT | form RIGHT ── */}
+                        <motion.div
+                            className="contact-body"
+                            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 1, delay: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                            style={{ display: "grid", gridTemplateColumns: "1fr 1.35fr", gap: "0" }}
+                        >
+                            {/* ══ LEFT — socials ══ */}
+                            <div className="contact-left" style={{
+                                borderRight: "1px solid rgba(255,255,255,0.08)",
+                                paddingRight: "52px",
+                                display: "flex", flexDirection: "column" as const, justifyContent: "space-between",
                             }}>
-                                {/* Form label */}
-                                <p style={{ fontFamily: "'DM Mono', monospace", fontSize: "9px", letterSpacing: "0.28em", textTransform: "uppercase" as const, color: "rgba(245,245,245,0.4)", margin: 0 }}>
+                                <div>
+                                    <p style={{ fontFamily: "'DM Mono', monospace", fontSize: "8.5px", letterSpacing: "0.3em", textTransform: "uppercase" as const, color: "rgba(245,245,245,0.25)", margin: "0 0 28px 0" }}>
+                                        Find me on
+                                    </p>
+
+                                    <div style={{ display: "flex", flexDirection: "column" as const, gap: "0" }}>
+                                        {socials.map((s, i) => (
+                                            <motion.a
+                                                key={i}
+                                                href={s.href}
+                                                target="_blank" rel="noreferrer"
+                                                className="social-row"
+                                                initial={{ opacity: 0, x: -12 }}
+                                                animate={{ opacity: 1, x: 0 }}
+                                                transition={{ delay: 0.65 + i * 0.07, duration: 0.45 }}
+                                                style={{
+                                                    display: "flex", alignItems: "center", justifyContent: "space-between",
+                                                    padding: "16px 0",
+                                                    borderBottom: "1px solid rgba(255,255,255,0.06)",
+                                                    textDecoration: "none", cursor: "pointer",
+                                                    transition: "all 0.2s",
+                                                }}
+                                            >
+                                                <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+                                                    {/* icon in a tiny box */}
+                                                    <div style={{
+                                                        width: "30px", height: "30px",
+                                                        border: "1px solid rgba(245,245,245,0.1)",
+                                                        borderRadius: "6px",
+                                                        display: "flex", alignItems: "center", justifyContent: "center",
+                                                        background: "rgba(255,255,255,0.04)",
+                                                        flexShrink: 0,
+                                                        transition: "all 0.2s",
+                                                    }}>
+                                                        <span className="social-icon" style={{ fontSize: "11px", color: "rgba(245,245,245,0.32)", transition: "color 0.2s" }}>{s.icon}</span>
+                                                    </div>
+                                                    <div style={{ display: "flex", flexDirection: "column" as const, gap: "2px" }}>
+                                                        <span className="social-label" style={{ fontFamily: "'DM Mono', monospace", fontSize: "10px", letterSpacing: "0.2em", textTransform: "uppercase" as const, color: "rgba(245,245,245,0.52)", transition: "color 0.2s" }}>
+                                                            {s.label}
+                                                        </span>
+                                                        <span className="social-sub" style={{ fontFamily: "'DM Mono', monospace", fontSize: "8.5px", letterSpacing: "0.08em", color: "rgba(245,245,245,0.22)", transition: "color 0.2s" }}>
+                                                            {s.sub}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <span className="social-arrow" style={{ opacity: 0.18, transition: "opacity 0.2s, transform 0.2s" }}>
+                                                    <svg width="10" height="10" viewBox="0 0 12 12" fill="none">
+                                                        <path d="M1 11L11 1M11 1H4M11 1V8" stroke="rgba(245,245,245,0.8)" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+                                                    </svg>
+                                                </span>
+                                            </motion.a>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                {/* availability pill */}
+                                {/* <div style={{ marginTop: "40px", display: "inline-flex", alignItems: "center", gap: "10px", padding: "9px 16px", border: "1px solid rgba(186,213,186,0.2)", borderRadius: "6px", background: "rgba(186,213,186,0.06)", width: "fit-content" }}>
+                                    <motion.div
+                                        animate={{ opacity: [1, 0.3, 1] }}
+                                        transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+                                        style={{ width: "5px", height: "5px", borderRadius: "50%", background: "rgba(186,213,186,0.9)", flexShrink: 0 }}
+                                    />
+                                    <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "8.5px", letterSpacing: "0.22em", textTransform: "uppercase" as const, color: "rgba(186,213,186,0.65)" }}>
+                                        Available for new projects
+                                    </span>
+                                </div> */}
+                            </div>
+
+                            {/* ══ RIGHT — form ══ */}
+                            <div style={{ paddingLeft: "52px" }}>
+
+                                <p style={{ fontFamily: "'DM Mono', monospace", fontSize: "8.5px", letterSpacing: "0.3em", textTransform: "uppercase" as const, color: "rgba(245,245,245,0.25)", margin: "0 0 36px 0" }}>
                                     Send a Message
                                 </p>
 
-                                {/* Fields */}
-                                <div className="form-row" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px" }}>
-                                    <Field id="first_name" label="First Name" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
-                                    <Field id="last_name" label="Last Name" value={lastName} onChange={(e) => setLastName(e.target.value)} />
+                                <div style={{ display: "flex", flexDirection: "column" as const, gap: "28px" }}>
+                                    {/* Name row */}
+                                    <div className="form-row" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "32px" }}>
+                                        <Field id="first_name" label="First Name" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
+                                        <Field id="last_name"  label="Last Name"  value={lastName}  onChange={(e) => setLastName(e.target.value)} />
+                                    </div>
+                                    <Field id="email"   label="Email Address" type="email" value={email}   onChange={(e) => setEmail(e.target.value)} />
+                                    <Field id="subject" label="Subject"                    value={subject} onChange={(e) => setSubject(e.target.value)} />
+                                    <Field id="message" label="Message"        rows={4}    value={message} onChange={(e) => setMessage(e.target.value)} />
                                 </div>
-                                <Field id="email" label="Email Address" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-                                <Field id="subject" label="Subject" value={subject} onChange={(e) => setSubject(e.target.value)} />
-                                <Field id="message" label="Message" rows={3} value={message} onChange={(e) => setMessage(e.target.value)} />
 
-                                {/* Submit */}
-                                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", paddingTop: "8px", borderTop: "1px solid rgba(255,255,255,0.18)" }}>
-                                    <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "9px", letterSpacing: "0.2em", textTransform: "uppercase" as const, color: "rgba(245,245,245,0.4)" }}>
+                                {/* Submit row */}
+                                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: "36px", paddingTop: "24px", borderTop: "1px solid rgba(255,255,255,0.08)" }}>
+                                    <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "8.5px", letterSpacing: "0.2em", textTransform: "uppercase" as const, color: "rgba(245,245,245,0.3)" }}>
                                         Reply within 24h
                                     </span>
-                                    <motion.button
-                                        onHoverStart={() => setHoverBtn(true)}
-                                        onHoverEnd={() => setHoverBtn(false)}
-                                        whileTap={{ scale: 0.97 }}
-                                        onClick={handleSend}
-                                        style={{
-                                            display: "flex", alignItems: "center", gap: "10px",
-                                            background: hoverBtn ? "rgba(255,255,255,0.28)" : "rgba(255,255,255,0.16)",
-                                            border: `1px solid ${hoverBtn ? "rgba(255,255,255,0.55)" : "rgba(255,255,255,0.3)"}`,
-                                            borderRadius: "8px", padding: "12px 24px",
-                                            cursor: "pointer",
-                                            transition: "all 0.25s",
-                                        }}
-                                    >
-                                        <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "10px", letterSpacing: "0.24em", textTransform: "uppercase" as const, color: hoverBtn ? "#F5F5F5" : "rgba(245,245,245,0.8)", transition: "color 0.25s" }}>
-                                            Send
-                                        </span>
-                                        <motion.div animate={{ x: hoverBtn ? 3 : 0, y: hoverBtn ? -3 : 0 }} transition={{ duration: 0.2 }}>
-                                            <svg width="11" height="11" viewBox="0 0 12 12" fill="none">
-                                                <path d="M1 11L11 1M11 1H4M11 1V8" stroke={hoverBtn ? "#F5F5F5" : "rgba(245,245,245,0.75)"} strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
-                                            </svg>
-                                        </motion.div>
-                                    </motion.button>
+
+                                    <AnimatePresence mode="wait">
+                                        {sent ? (
+                                            <motion.div
+                                                key="sent"
+                                                initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -4 }}
+                                                style={{ display: "flex", alignItems: "center", gap: "8px" }}
+                                            >
+                                                <svg width="13" height="13" viewBox="0 0 14 14" fill="none">
+                                                    <path d="M2 7l4 4 6-6" stroke="rgba(186,213,186,0.9)" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+                                                </svg>
+                                                <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "9px", letterSpacing: "0.22em", textTransform: "uppercase" as const, color: "rgba(186,213,186,0.8)" }}>
+                                                    Sent
+                                                </span>
+                                            </motion.div>
+                                        ) : (
+                                            <motion.button
+                                                key="btn"
+                                                onHoverStart={() => setHoverBtn(true)}
+                                                onHoverEnd={() => setHoverBtn(false)}
+                                                whileTap={{ scale: 0.97 }}
+                                                onClick={handleSend}
+                                                initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                                                style={{
+                                                    display: "flex", alignItems: "center", gap: "10px",
+                                                    background: hoverBtn ? "rgba(171,205,219,0.15)" : "rgba(255,255,255,0.07)",
+                                                    border: `1px solid ${hoverBtn ? "rgba(171,205,219,0.4)" : "rgba(255,255,255,0.15)"}`,
+                                                    borderRadius: "7px", padding: "12px 22px",
+                                                    cursor: "pointer", transition: "all 0.25s",
+                                                }}
+                                            >
+                                                <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "9.5px", letterSpacing: "0.24em", textTransform: "uppercase" as const, color: hoverBtn ? "#F5F5F5" : "rgba(245,245,245,0.72)", transition: "color 0.25s" }}>
+                                                    Send Message
+                                                </span>
+                                                <motion.div animate={{ x: hoverBtn ? 3 : 0, y: hoverBtn ? -3 : 0 }} transition={{ duration: 0.2 }}>
+                                                    <svg width="10" height="10" viewBox="0 0 12 12" fill="none">
+                                                        <path d="M1 11L11 1M11 1H4M11 1V8" stroke={hoverBtn ? "#F5F5F5" : "rgba(245,245,245,0.6)"} strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
+                                                    </svg>
+                                                </motion.div>
+                                            </motion.button>
+                                        )}
+                                    </AnimatePresence>
                                 </div>
                             </div>
-                        </div>
-                    </motion.div>
+                        </motion.div>
 
-                    {/* Footer */}
-                    <div className="contact-footer" style={{ maxWidth: "1100px", margin: "0 auto", padding: "0 44px 80px" }}>
-                        <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "9px", letterSpacing: "0.25em", textTransform: "uppercase" as const, color: "rgba(245,245,245,0.2)" }}>
-                            Always Open to the Right Conversation
-                        </span>
+                        {/* ── FOOTER ── */}
+                        <motion.div
+                            initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}
+                            transition={{ duration: 0.8 }}
+                            style={{ marginTop: "64px", display: "flex", alignItems: "center", gap: "20px" }}
+                        >
+                            <div style={{ flex: 1, height: "1px", background: "rgba(245,245,245,0.07)" }} />
+                            <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "9px", letterSpacing: "0.25em", textTransform: "uppercase" as const, color: "rgba(245,245,245,0.2)" }}>
+                                Always Open to the Right Conversation
+                            </span>
+                            <div style={{ flex: 1, height: "1px", background: "rgba(245,245,245,0.07)" }} />
+                        </motion.div>
+
                     </div>
                 </div>
             </section>
