@@ -70,7 +70,7 @@ const projects = [
         description: "AI-driven platform with resume-aware question generation, structured scoring pipeline, and an analytics layer identifying skill gaps and progression.",
         stack: ["Next.js", "Node.js", "MySQL", "OpenAI API"],
         github: "https://github.com/thenurinethangi/Interview-Simulator",
-        demo: null,
+        demo: "https://www.linkedin.com/posts/thenurinanayakkara_softwareengineering-nextjs-typescript-activity-7440084593606754304-2mKn?utm_source=share&utm_medium=member_desktop&rcm=ACoAAEfYj54BMJWjPY9WNQWLcrtqwTpc3bZuuYw",
         accent: "#D1BEDb",
         letter: "A",
     },
