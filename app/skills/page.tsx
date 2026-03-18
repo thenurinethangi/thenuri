@@ -28,6 +28,8 @@ import {
     SiSwagger,
     SiPython,
     SiThreedotjs,
+    SiMysql,
+    SiSupabase,
 } from "react-icons/si"
 import { FaJava, FaMicrosoft } from "react-icons/fa"
 
@@ -82,10 +84,12 @@ const skills = [
     {
         title: "Database",
         items: [
-            { name: "MySQL", icon: <SiPostgresql /> },
+            { name: "PostgreSQL", icon: <SiPostgresql /> },
+            { name: "MySQL", icon: <SiMysql /> },
             { name: "MongoDB", icon: <SiMongodb /> },
             { name: "Redis", icon: <SiRedis /> },
             { name: "Firebase", icon: <SiFirebase /> },
+            { name: "Supabase", icon: <SiSupabase /> },
         ],
     },
     {
